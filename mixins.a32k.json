@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "bleach.a32k.mixin.mixins",
+  "refmap": "mixins.a32k.refmap.json",
+  "mixins": [
+  	"MixinContainerGui",
+  	"MixinNettyDecoder",
+  	"MixinPacketRead",
+  	"MixinPacketSend"
+   ]
+}
