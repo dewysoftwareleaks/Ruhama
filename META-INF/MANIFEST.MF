@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-TweakOrder: 0
-MixinConfigs: mixins.a32k.json
-FMLCorePluginContainsFMLMod: true
-tweakClass: org.spongepowered.asm.launch.MixinTweaker
-ForceLoadAsMod: true
-FMLCorePlugin: bleach.a32k.mixin.MixinLoader
-
