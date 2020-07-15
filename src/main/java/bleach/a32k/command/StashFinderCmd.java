@@ -39,11 +39,10 @@ public class StashFinderCmd extends CommandBase implements IClientCommand
             {
                 ((StashFinder) Objects.requireNonNull(ModuleManager.getModuleByName("StashFinder"))).startChunk = new ChunkPos(Integer.parseInt(args[0]) >> 4, Integer.parseInt(args[1]) >> 4);
                 RuhamaLogger.log("Set stashfinder start to: " + args[0] + ", " + args[1]);
-            } catch (Exception var5)
+            } catch (Exception e)
             {
                 RuhamaLogger.log("wrong, /stashfinder x z");
             }
-
         }
     }
 

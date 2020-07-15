@@ -49,7 +49,7 @@ public abstract class ModuleWindow
         this.posY = posY;
     }
 
-    public abstract void draw(int var1, int var2, int var3);
+    public abstract void draw(int b, int r, int u);
 
     public void setPos(int x, int y)
     {

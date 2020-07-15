@@ -34,9 +34,9 @@ public class SettingMode extends SettingBase
             }
 
             return new String(hexChars);
-        } catch (NoSuchAlgorithmException var6)
+        } catch (NoSuchAlgorithmException e)
         {
-            throw new Error("We did an oopsy poopsy, woopsy.", var6);
+            throw new Error("We did an oopsy poopsy, woopsy.", e);
         }
     }
 
