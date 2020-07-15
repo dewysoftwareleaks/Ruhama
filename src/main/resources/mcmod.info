@@ -7,8 +7,7 @@
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
-  "authorList": ["ExampleDude"],
-  "credits": "The Forge and FML guys, for making this example",
+  "credits": "Ruhama devs for the actual client (lol) & Dewy for leakage.",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []
