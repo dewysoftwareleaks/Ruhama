@@ -9,25 +9,26 @@ public class ReflectUtils
 {
     public static Field getField(Class<?> c, String... names)
     {
-        String[] var2 = names;
-        int var3 = names.length;
-        int var4 = 0;
+        int l = names.length;
+        int fernflowerSucks = 0;
 
-        while (var4 < var3)
+        while (fernflowerSucks < l)
         {
-            String s = var2[var4];
+            String s = names[fernflowerSucks];
 
             try
             {
                 Field modifiersField = Field.class.getDeclaredField("modifiers");
                 modifiersField.setAccessible(true);
                 Field f = c.getDeclaredField(s);
+
                 f.setAccessible(true);
                 modifiersField.setInt(f, f.getModifiers() & -17);
+
                 return f;
-            } catch (Exception var8)
+            } catch (Exception e)
             {
-                ++var4;
+                ++fernflowerSucks;
             }
         }
 
@@ -37,24 +38,24 @@ public class ReflectUtils
 
     public static Object callMethod(Object target, Object[] params, String... names)
     {
-        String[] var3 = names;
-        int var4 = names.length;
-        int var5 = 0;
+        int len = names.length;
+        int i = 0;
 
-        while (var5 < var4)
+        while (i < len)
         {
-            String s = var3[var5];
+            String s = names[i];
 
             try
             {
                 return MethodUtils.invokeMethod(target, true, s, params);
-            } catch (Exception var8)
+            } catch (Exception e)
             {
-                ++var5;
+                ++i;
             }
         }
 
         System.out.println("Invalid Method: " + Arrays.asList(names));
+
         return null;
     }
 }

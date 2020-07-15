@@ -2,7 +2,6 @@ package bleach.a32k.utils;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -34,20 +33,19 @@ public class WorldUtils
 
     public static void openBlock(BlockPos pos)
     {
-        EnumFacing[] var1 = EnumFacing.values();
-        int var2 = var1.length;
+        EnumFacing[] facings = EnumFacing.values();
 
-        for (int var3 = 0; var3 < var2; ++var3)
+        for (EnumFacing f : facings)
         {
-            EnumFacing f = var1[var3];
             Block neighborBlock = mc.world.getBlockState(pos.offset(f)).getBlock();
+
             if (emptyBlocks.contains(neighborBlock))
             {
                 mc.playerController.processRightClickBlock(mc.player, mc.world, pos, f.getOpposite(), new Vec3d(pos), EnumHand.MAIN_HAND);
+
                 return;
             }
         }
-
     }
 
     public static boolean placeBlock(BlockPos pos, int slot, boolean rotate, boolean rotateBack)
@@ -62,17 +60,17 @@ public class WorldUtils
                 mc.player.inventory.currentItem = slot;
             }
 
-            EnumFacing[] var4 = EnumFacing.values();
-            int var5 = var4.length;
+            EnumFacing[] facings = EnumFacing.values();
 
-            for (int var6 = 0; var6 < var5; ++var6)
+            for (EnumFacing f : facings)
             {
-                EnumFacing f = var4[var6];
                 Block neighborBlock = mc.world.getBlockState(pos.offset(f)).getBlock();
                 Vec3d vec = new Vec3d(pos.getX() + 0.5D + (double) f.getXOffset() * 0.5D, pos.getY() + 0.5D + (double) f.getYOffset() * 0.5D, pos.getZ() + 0.5D + (double) f.getZOffset() * 0.5D);
+
                 if (!emptyBlocks.contains(neighborBlock) && mc.player.getPositionEyes(mc.getRenderPartialTicks()).distanceTo(vec) <= 4.25D)
                 {
                     float[] rot = new float[] {mc.player.rotationYaw, mc.player.rotationPitch};
+
                     if (rotate)
                     {
                         rotatePacket(vec.x, vec.y, vec.z);
@@ -110,17 +108,18 @@ public class WorldUtils
         } else
         {
             AxisAlignedBB box = new AxisAlignedBB(pos);
-            Iterator var2 = mc.world.loadedEntityList.iterator();
+            Iterator entityIter = mc.world.loadedEntityList.iterator();
 
             Entity e;
+
             do
             {
-                if (!var2.hasNext())
+                if (!entityIter.hasNext())
                 {
                     return true;
                 }
 
-                e = (Entity) var2.next();
+                e = (Entity) entityIter.next();
             } while (!(e instanceof EntityLivingBase) || !box.intersects(e.getEntityBoundingBox()));
 
             return false;
@@ -134,12 +133,10 @@ public class WorldUtils
             return false;
         } else
         {
-            EnumFacing[] var1 = EnumFacing.values();
-            int var2 = var1.length;
+            EnumFacing[] facings = EnumFacing.values();
 
-            for (int var3 = 0; var3 < var2; ++var3)
+            for (EnumFacing f : facings)
             {
-                EnumFacing f = var1[var3];
                 if (!emptyBlocks.contains(mc.world.getBlockState(pos.offset(f)).getBlock()) && mc.player.getPositionEyes(mc.getRenderPartialTicks()).distanceTo(new Vec3d(pos.getX() + 0.5D + (double) f.getXOffset() * 0.5D, pos.getY() + 0.5D + (double) f.getYOffset() * 0.5D, pos.getZ() + 0.5D + (double) f.getZOffset() * 0.5D)) <= 4.25D)
                 {
                     return true;
@@ -161,12 +158,12 @@ public class WorldUtils
         double diffY = y - (mc.player.posY + (double) mc.player.getEyeHeight());
         double diffZ = z - mc.player.posZ;
         double diffXZ = Math.sqrt(diffX * diffX + diffZ * diffZ);
+
         float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0F;
         float pitch = (float) (-Math.toDegrees(Math.atan2(diffY, diffXZ)));
-        EntityPlayerSP var10000 = mc.player;
-        var10000.rotationYaw += MathHelper.wrapDegrees(yaw - mc.player.rotationYaw);
-        var10000 = mc.player;
-        var10000.rotationPitch += MathHelper.wrapDegrees(pitch - mc.player.rotationPitch);
+
+        mc.player.rotationYaw += MathHelper.wrapDegrees(yaw - mc.player.rotationYaw);
+        mc.player.rotationPitch += MathHelper.wrapDegrees(pitch - mc.player.rotationPitch);
     }
 
     public static void rotatePacket(double x, double y, double z)
@@ -175,8 +172,10 @@ public class WorldUtils
         double diffY = y - (mc.player.posY + (double) mc.player.getEyeHeight());
         double diffZ = z - mc.player.posZ;
         double diffXZ = Math.sqrt(diffX * diffX + diffZ * diffZ);
+
         float yaw = (float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0F;
         float pitch = (float) (-Math.toDegrees(Math.atan2(diffY, diffXZ)));
+
         mc.player.connection.sendPacket(new Rotation(yaw, pitch, mc.player.onGround));
     }
 }

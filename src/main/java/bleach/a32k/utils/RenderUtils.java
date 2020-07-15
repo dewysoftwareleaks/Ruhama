@@ -6,16 +6,16 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Objects;
+
 public class RenderUtils
 {
-    private static final Minecraft mc = Minecraft.getMinecraft();
-
     public static double[] rPos()
     {
         try
         {
-            return new double[] {(Double) ReflectUtils.getField(RenderManager.class, "renderPosX", "renderPosX").get(mc.getRenderManager()), (Double) ReflectUtils.getField(RenderManager.class, "renderPosY", "renderPosY").get(mc.getRenderManager()), (Double) ReflectUtils.getField(RenderManager.class, "renderPosZ", "renderPosZ").get(mc.getRenderManager())};
-        } catch (Exception var1)
+            return new double[] {(Double) Objects.requireNonNull(ReflectUtils.getField(RenderManager.class, "renderPosX", "renderPosX")).get(Minecraft.getMinecraft().getRenderManager()), (Double) Objects.requireNonNull(ReflectUtils.getField(RenderManager.class, "renderPosY", "renderPosY")).get(Minecraft.getMinecraft().getRenderManager()), (Double) Objects.requireNonNull(ReflectUtils.getField(RenderManager.class, "renderPosZ", "renderPosZ")).get(Minecraft.getMinecraft().getRenderManager())};
+        } catch (Exception e)
         {
             return new double[] {0.0D, 0.0D, 0.0D};
         }
@@ -26,15 +26,18 @@ public class RenderUtils
         try
         {
             glSetup();
+
             double[] rPos = rPos();
+
             box = new AxisAlignedBB(box.minX - rPos[0], box.minY - rPos[1], box.minZ - rPos[2], box.maxX - rPos[0], box.maxY - rPos[1], box.maxZ - rPos[2]);
+
             RenderGlobal.renderFilledBox(box, r, g, b, a);
             RenderGlobal.drawSelectionBoundingBox(box, r, g, b, a * 1.5F);
+
             glCleanup();
-        } catch (Exception var6)
+        } catch (Exception ignored)
         {
         }
-
     }
 
     public static void glSetup()

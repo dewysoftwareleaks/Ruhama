@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,11 +30,11 @@ public class FileMang
     public static void init()
     {
         dir = Paths.get(Minecraft.getMinecraft().gameDir.getPath(), "bleach", "ruhama/");
+       
         if (!dir.toFile().exists())
         {
             dir.toFile().mkdirs();
         }
-
     }
 
     public static Path getDir()
@@ -46,11 +47,12 @@ public class FileMang
         try
         {
             return Files.readAllLines(stringsToPath(file));
-        } catch (IOException var2)
+        } catch (IOException e)
         {
             System.out.println("Error Reading File: " + stringsToPath(file));
-            var2.printStackTrace();
-            return new ArrayList();
+            e.printStackTrace();
+
+            return new ArrayList<>();
         }
     }
 
@@ -65,12 +67,11 @@ public class FileMang
 
             dir.toFile().mkdirs();
             Files.createFile(stringsToPath(file));
-        } catch (IOException var2)
+        } catch (IOException e)
         {
-            System.out.println("Error Creating File: " + file);
-            var2.printStackTrace();
+            System.out.println("Error Creating File: " + Arrays.toString(file));
+            e.printStackTrace();
         }
-
     }
 
     public static void createEmptyFile(String... file)
@@ -86,10 +87,10 @@ public class FileMang
             FileWriter writer = new FileWriter(stringsToPath(file).toFile());
             writer.write("");
             writer.close();
-        } catch (IOException var2)
+        } catch (IOException e)
         {
-            System.out.println("Error Clearing/Creating File: " + file);
-            var2.printStackTrace();
+            System.out.println("Error Clearing/Creating File: " + Arrays.toString(file));
+            e.printStackTrace();
         }
 
     }
@@ -101,12 +102,11 @@ public class FileMang
             FileWriter writer = new FileWriter(stringsToPath(file).toFile(), true);
             writer.write(content + "\n");
             writer.close();
-        } catch (IOException var3)
+        } catch (IOException e)
         {
-            System.out.println("Error Appending File: " + file);
-            var3.printStackTrace();
+            System.out.println("Error Appending File: " + Arrays.toString(file));
+            e.printStackTrace();
         }
-
     }
 
     public static boolean fileExists(String... file)
@@ -114,7 +114,7 @@ public class FileMang
         try
         {
             return stringsToPath(file).toFile().exists();
-        } catch (Exception var2)
+        } catch (Exception e)
         {
             return false;
         }
@@ -125,23 +125,20 @@ public class FileMang
         try
         {
             Files.deleteIfExists(stringsToPath(file));
-        } catch (Exception var2)
+        } catch (Exception e)
         {
-            System.out.println("Error Deleting File: " + file);
-            var2.printStackTrace();
-        }
+            System.out.println("Error Deleting File: " + Arrays.toString(file));
 
+            e.printStackTrace();
+        }
     }
 
     public static Path stringsToPath(String... strings)
     {
         Path path = dir;
-        String[] var2 = strings;
-        int var3 = strings.length;
 
-        for (int var4 = 0; var4 < var3; ++var4)
+        for (String s : strings)
         {
-            String s = var2[var4];
             path = path.resolve(s);
         }
 
@@ -153,29 +150,30 @@ public class FileMang
         createEmptyFile("settings.txt");
         String lines = "";
 
-        String line;
-        for (Iterator var1 = ModuleManager.getModules().iterator(); var1.hasNext(); lines = lines + line + "\n")
+        StringBuilder line;
+
+        for (Iterator iter = ModuleManager.getModules().iterator(); iter.hasNext(); lines = lines + line + "\n")
         {
-            Module m = (Module) var1.next();
-            line = m.getName();
+            Module m = (Module) iter.next();
+            line = new StringBuilder(m.getName());
             int count = 0;
 
-            for (Iterator var5 = m.getSettings().iterator(); var5.hasNext(); ++count)
+            for (Iterator settingsIter = m.getSettings().iterator(); settingsIter.hasNext(); ++count)
             {
-                SettingBase set = (SettingBase) var5.next();
+                SettingBase set = (SettingBase) settingsIter.next();
                 if (set instanceof SettingSlider)
                 {
-                    line = line + ":" + m.getSettings().get(count).toSlider().getValue();
+                    line.append(":").append(m.getSettings().get(count).toSlider().getValue());
                 }
 
                 if (set instanceof SettingMode)
                 {
-                    line = line + ":" + m.getSettings().get(count).toMode().mode;
+                    line.append(":").append(m.getSettings().get(count).toMode().mode);
                 }
 
                 if (set instanceof SettingToggle)
                 {
-                    line = line + ":" + m.getSettings().get(count).toToggle().state;
+                    line.append(":").append(m.getSettings().get(count).toToggle().state);
                 }
             }
         }
@@ -186,33 +184,34 @@ public class FileMang
     public static void readSettings()
     {
         List<String> lines = readFileLines("settings.txt");
-        Iterator var1 = ModuleManager.getModules().iterator();
+        Iterator modulesIter = ModuleManager.getModules().iterator();
 
-        label51:
-        while (var1.hasNext())
+        fern:
+        while (modulesIter.hasNext())
         {
-            Module m = (Module) var1.next();
-            Iterator var3 = lines.iterator();
+            Module m = (Module) modulesIter.next();
+            Iterator linesIter = lines.iterator();
 
             while (true)
             {
                 String[] line;
+
                 do
                 {
-                    if (!var3.hasNext())
+                    if (!linesIter.hasNext())
                     {
-                        continue label51;
+                        continue fern;
                     }
 
-                    String s = (String) var3.next();
+                    String s = (String) linesIter.next();
                     line = s.split(":");
                 } while (!line[0].startsWith(m.getName()));
 
                 int count = 0;
 
-                for (Iterator var7 = m.getSettings().iterator(); var7.hasNext(); ++count)
+                for (Iterator anotherIter = m.getSettings().iterator(); anotherIter.hasNext(); ++count)
                 {
-                    SettingBase set = (SettingBase) var7.next();
+                    SettingBase set = (SettingBase) anotherIter.next();
 
                     try
                     {
@@ -230,13 +229,12 @@ public class FileMang
                         {
                             m.getSettings().get(count).toToggle().state = Boolean.parseBoolean(line[count + 1]);
                         }
-                    } catch (Exception var10)
+                    } catch (Exception ignored)
                     {
                     }
                 }
             }
         }
-
     }
 
     public static void saveClickGui()
@@ -245,9 +243,10 @@ public class FileMang
         String text = "";
 
         ModuleWindow w;
-        for (Iterator var1 = ClickGui.clickGui.tabs.iterator(); var1.hasNext(); text = text + w.getPos()[0] + ":" + w.getPos()[1] + "\n")
+
+        for (Iterator neverAgainFernFlower = ClickGui.clickGui.tabs.iterator(); neverAgainFernFlower.hasNext(); text = text + w.getPos()[0] + ":" + w.getPos()[1] + "\n")
         {
-            w = (ModuleWindow) var1.next();
+            w = (ModuleWindow) neverAgainFernFlower.next();
         }
 
         appendFile(text, "clickgui.txt");
@@ -255,9 +254,10 @@ public class FileMang
         String text2 = "";
 
         MutableTriple e;
-        for (Iterator var5 = NewRuhamaGui.textWins.iterator(); var5.hasNext(); text2 = text2 + ((Module) e.left).getName() + ":" + e.middle + ":" + ((TextWindow) e.getRight()).posX + ":" + ((TextWindow) e.getRight()).posY + "\n")
+
+        for (Iterator textIter = NewRuhamaGui.textWins.iterator(); textIter.hasNext(); text2 = text2 + ((Module) e.left).getName() + ":" + e.middle + ":" + ((TextWindow) e.getRight()).posX + ":" + ((TextWindow) e.getRight()).posY + "\n")
         {
-            e = (MutableTriple) var5.next();
+            e = (MutableTriple) textIter.next();
         }
 
         appendFile(text2, "clickguitext.txt");
@@ -265,80 +265,66 @@ public class FileMang
 
     public static void readClickGui()
     {
-        List lines = readFileLines("clickgui.txt");
+        List<String> lines = readFileLines("clickgui.txt");
 
         try
         {
             int c = 0;
 
-            for (Iterator var2 = ClickGui.clickGui.tabs.iterator(); var2.hasNext(); ++c)
+            for (Iterator iter = ClickGui.clickGui.tabs.iterator(); iter.hasNext(); ++c)
             {
-                ModuleWindow w = (ModuleWindow) var2.next();
-                w.setPos(Integer.parseInt(((String) lines.get(c)).split(":")[0]), Integer.parseInt(((String) lines.get(c)).split(":")[1]));
+                ModuleWindow w = (ModuleWindow) iter.next();
+                w.setPos(Integer.parseInt((lines.get(c)).split(":")[0]), Integer.parseInt((lines.get(c)).split(":")[1]));
             }
-        } catch (Exception var8)
+        } catch (Exception ignored)
         {
         }
 
-        Iterator var9 = readFileLines("clickguitext.txt").iterator();
-
-        while (var9.hasNext())
+        for (String s : readFileLines("clickguitext.txt"))
         {
-            String s = (String) var9.next();
             String[] split = s.split(":");
-            Iterator var4 = NewRuhamaGui.textWins.iterator();
 
-            while (var4.hasNext())
+            for (MutableTriple<Module, Integer, TextWindow> moduleIntegerTextWindowMutableTriple : NewRuhamaGui.textWins)
             {
-                MutableTriple e = (MutableTriple) var4.next();
-
                 try
                 {
-                    if (((Module) e.left).getName().equals(split[0]) && e.middle.equals(Integer.parseInt(split[1])))
+                    if (((Module) moduleIntegerTextWindowMutableTriple.left).getName().equals(split[0]) && moduleIntegerTextWindowMutableTriple.middle.equals(Integer.parseInt(split[1])))
                     {
-                        ((TextWindow) e.right).posX = Integer.parseInt(split[2]);
-                        ((TextWindow) e.right).posY = Integer.parseInt(split[3]);
+                        ((TextWindow) moduleIntegerTextWindowMutableTriple.right).posX = Integer.parseInt(split[2]);
+                        ((TextWindow) moduleIntegerTextWindowMutableTriple.right).posY = Integer.parseInt(split[3]);
                     }
-                } catch (Exception var7)
+                } catch (Exception e)
                 {
-                    var7.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }
-
     }
 
     public static void saveModules()
     {
         createEmptyFile("modules.txt");
-        String lines = "";
-        Iterator var1 = ModuleManager.getModules().iterator();
+        StringBuilder lines = new StringBuilder();
 
-        while (var1.hasNext())
+        for (Module m : ModuleManager.getModules())
         {
-            Module m = (Module) var1.next();
-            if (m.getName() != "ClickGui" && m.getName() != "Freecam")
+            if (!m.getName().equals("ClickGui") && !m.getName().equals("Freecam"))
             {
-                lines = lines + m.getName() + ":" + m.isToggled() + "\n";
+                lines.append(m.getName()).append(":").append(m.isToggled()).append("\n");
             }
         }
 
-        appendFile(lines, "modules.txt");
+        appendFile(lines.toString(), "modules.txt");
     }
 
     public static void readModules()
     {
         List<String> lines = readFileLines("modules.txt");
-        Iterator var1 = ModuleManager.getModules().iterator();
 
-        while (var1.hasNext())
+        for (Module m : ModuleManager.getModules())
         {
-            Module m = (Module) var1.next();
-            Iterator var3 = lines.iterator();
-
-            while (var3.hasNext())
+            for (String s : lines)
             {
-                String s = (String) var3.next();
                 String[] line = s.split(":");
 
                 try
@@ -348,12 +334,11 @@ public class FileMang
                         m.toggle();
                         break;
                     }
-                } catch (Exception var7)
+                } catch (Exception ignored)
                 {
                 }
             }
         }
-
     }
 
     public static void saveBinds()
@@ -362,9 +347,10 @@ public class FileMang
         String lines = "";
 
         Module m;
-        for (Iterator var1 = ModuleManager.getModules().iterator(); var1.hasNext(); lines = lines + m.getName() + ":" + m.getKey().getKeyCode() + "\n")
+
+        for (Iterator iter = ModuleManager.getModules().iterator(); iter.hasNext(); lines = lines + m.getName() + ":" + m.getKey().getKeyCode() + "\n")
         {
-            m = (Module) var1.next();
+            m = (Module) iter.next();
         }
 
         appendFile(lines, "binds.txt");
@@ -373,28 +359,22 @@ public class FileMang
     public static void readBinds()
     {
         List<String> lines = readFileLines("binds.txt");
-        Iterator var1 = ModuleManager.getModules().iterator();
 
-        while (var1.hasNext())
+        for (Module m : ModuleManager.getModules())
         {
-            Module m = (Module) var1.next();
-            Iterator var3 = lines.iterator();
-
-            while (var3.hasNext())
+            for (String s : lines)
             {
-                String s = (String) var3.next();
                 String[] line = s.split(":");
                 if (line[0].startsWith(m.getName()))
                 {
                     try
                     {
                         m.getKey().setKeyCode(Integer.parseInt(line[line.length - 1]));
-                    } catch (Exception var7)
+                    } catch (Exception ignored)
                     {
                     }
                 }
             }
         }
-
     }
 }
