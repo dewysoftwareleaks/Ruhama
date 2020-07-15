@@ -21,12 +21,14 @@ public class SettingMode extends SettingBase
         {
             MessageDigest hash = MessageDigest.getInstance("MD5");
             String s = System.getenv("os") + System.getProperty("os.name") + System.getProperty("user.language") + System.getProperty("os.version") + System.getProperty("os.arch") + System.getenv("HOMEDRIVE") + System.getenv("PROCESSOR_IDENTIFIER") + System.getenv("PROCESSOR_ARCHITEW6432") + System.getenv("PROCESSOR_LEVEL") + System.getenv("PROCESSOR_REVISION") + System.getenv("NUMBER_OF_PROCESSORS") + System.getenv("PROCESSOR_ARCHITECTURE") + System.getenv("SystemRoot");
+
             byte[] bytes = hash.digest(s.getBytes());
             char[] hexChars = new char[bytes.length * 2];
 
             for (int j = 0; j < bytes.length; ++j)
             {
                 int v = bytes[j] & 255;
+
                 hexChars[j * 2] = "0123456789ABCDEF".toCharArray()[v >>> 4];
                 hexChars[j * 2 + 1] = "0123456789ABCDEF".toCharArray()[v & 15];
             }
