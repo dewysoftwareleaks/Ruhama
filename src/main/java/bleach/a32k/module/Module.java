@@ -14,13 +14,18 @@ public class Module
 {
     private final Category category;
     private final String desc;
-    private final List<TextWindow> windows = new ArrayList();
+    
+    private final List<TextWindow> windows = new ArrayList<>();
+    
     public boolean keyActive = false;
+    
     protected Minecraft mc = Minecraft.getMinecraft();
-    private String name;
+    
+    private final String name;
     private KeyBinding key;
+    
     private boolean toggled;
-    private List<SettingBase> settings = new ArrayList();
+    private List<SettingBase> settings = new ArrayList<>();
 
     public Module(String nm, int k, Category c, String d, List<SettingBase> s)
     {
@@ -28,6 +33,7 @@ public class Module
         this.registerBind(nm, k);
         this.category = c;
         this.desc = d;
+        
         if (s != null)
         {
             this.settings = s;
@@ -39,26 +45,26 @@ public class Module
     public void toggle()
     {
         this.toggled = !this.toggled;
+        
         if (this.toggled)
         {
             try
             {
                 this.onEnable();
-            } catch (Exception var3)
+            } catch (Exception e)
             {
-                var3.printStackTrace();
+                e.printStackTrace();
             }
         } else
         {
             try
             {
                 this.onDisable();
-            } catch (Exception var2)
+            } catch (Exception e)
             {
-                var2.printStackTrace();
+                e.printStackTrace();
             }
         }
-
     }
 
     public void onEnable()
@@ -86,7 +92,7 @@ public class Module
         return false;
     }
 
-    public boolean onPacketSend(Packet<?> packet)
+    public boolean onPacketSend()
     {
         return false;
     }
@@ -95,12 +101,7 @@ public class Module
     {
         return this.name;
     }
-
-    public void setName(String name)
-    {
-        this.name = name;
-    }
-
+    
     public Category getCategory()
     {
         return this.category;
@@ -115,12 +116,7 @@ public class Module
     {
         return this.key;
     }
-
-    public void setKey(KeyBinding key)
-    {
-        this.key = key;
-    }
-
+    
     public List<SettingBase> getSettings()
     {
         return this.settings;
@@ -144,6 +140,7 @@ public class Module
     public void registerBind(String name, int keycode)
     {
         this.key = new KeyBinding(name, keycode, "Ruhama");
+        
         ClientRegistry.registerKeyBinding(this.key);
     }
 }

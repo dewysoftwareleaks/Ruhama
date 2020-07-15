@@ -25,7 +25,7 @@ public class MixinPacketSend
     )
     public void sendPacket(Packet<?> packetIn, CallbackInfo info)
     {
-        if (ModuleManager.onPacketSend(packetIn))
+        if (ModuleManager.onPacketSend())
         {
             info.cancel();
         }

@@ -16,22 +16,22 @@ public class ModuleManager
 
     public static List<Module> getModules()
     {
-        return new ArrayList(mods);
+        return new ArrayList<>(mods);
     }
 
     public static Module getModuleByName(String name)
     {
-        Iterator var1 = mods.iterator();
-
+        Iterator<Module> modsIter = mods.iterator();
         Module m;
+
         do
         {
-            if (!var1.hasNext())
+            if (!modsIter.hasNext())
             {
                 return null;
             }
 
-            m = (Module) var1.next();
+            m = modsIter.next();
         } while (!name.equals(m.getName()));
 
         return m;
@@ -39,127 +39,102 @@ public class ModuleManager
 
     public static List<Module> getModulesInCat(Category cat)
     {
-        List<Module> mds = new ArrayList();
-        Iterator var2 = mods.iterator();
+        List<Module> ms = new ArrayList<>();
 
-        while (var2.hasNext())
+        for (Module m : mods)
         {
-            Module m = (Module) var2.next();
             if (m.getCategory().equals(cat))
             {
-                mds.add(m);
+                ms.add(m);
             }
         }
 
-        return mds;
+        return ms;
     }
 
     public static void onUpdate()
     {
-        Iterator var0 = mods.iterator();
-
-        while (var0.hasNext())
+        for (Module m : mods)
         {
-            Module m = (Module) var0.next();
-
             try
             {
                 if (m.isToggled())
                 {
                     m.onUpdate();
                 }
-            } catch (Exception var3)
+            } catch (Exception e)
             {
-                var3.printStackTrace();
+                e.printStackTrace();
             }
         }
-
     }
 
     public static void onRender()
     {
-        Iterator var0 = mods.iterator();
-
-        while (var0.hasNext())
+        for (Module m : mods)
         {
-            Module m = (Module) var0.next();
-
             try
             {
                 if (m.isToggled())
                 {
                     m.onRender();
                 }
-            } catch (Exception var3)
+            } catch (Exception e)
             {
-                var3.printStackTrace();
+                e.printStackTrace();
             }
         }
-
     }
 
     public static void onOverlay()
     {
-        Iterator var0 = mods.iterator();
-
-        while (var0.hasNext())
+        for (Module m : mods)
         {
-            Module m = (Module) var0.next();
-
             try
             {
                 if (m.isToggled())
                 {
                     m.onOverlay();
                 }
-            } catch (Exception var3)
+            } catch (Exception e)
             {
-                var3.printStackTrace();
+                e.printStackTrace();
             }
         }
-
     }
 
     public static boolean onPacketRead(Packet<?> packet)
     {
-        Iterator var1 = mods.iterator();
-
-        while (var1.hasNext())
+        for (Module m : mods)
         {
-            Module m = (Module) var1.next();
-
             try
             {
                 if (m.isToggled() && m.onPacketRead(packet))
                 {
                     return true;
                 }
-            } catch (Exception var4)
+            } catch (Exception e)
             {
-                var4.printStackTrace();
+                e.printStackTrace();
             }
         }
 
         return false;
     }
 
-    public static boolean onPacketSend(Packet<?> packet)
+    public static boolean onPacketSend()
     {
-        Iterator var1 = mods.iterator();
-
-        while (var1.hasNext())
+        for (Module m : mods)
         {
-            Module m = (Module) var1.next();
-
             try
             {
-                if (m.isToggled() && m.onPacketSend(packet))
+                if (m.isToggled() && m.onPacketSend())
                 {
                     return true;
                 }
-            } catch (Exception var4)
+            } catch (Exception e)
             {
-                var4.printStackTrace();
+                e.printStackTrace();
             }
         }
 
@@ -170,12 +145,8 @@ public class ModuleManager
     {
         if (Minecraft.getMinecraft().currentScreen == null)
         {
-            Iterator var0 = mods.iterator();
-
-            while (var0.hasNext())
+            for (Module m : mods)
             {
-                Module m = (Module) var0.next();
-
                 try
                 {
                     if (Keyboard.isKeyDown(m.getKey().getKeyCode()) && !m.keyActive)
@@ -186,11 +157,10 @@ public class ModuleManager
                     {
                         m.keyActive = false;
                     }
-                } catch (Exception var3)
+                } catch (Exception ignored)
                 {
                 }
             }
-
         }
     }
 }
