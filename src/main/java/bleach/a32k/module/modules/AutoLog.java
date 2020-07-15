@@ -46,20 +46,24 @@ public class AutoLog extends Module
                     }
                 }
 
-                Iterator var5;
+                Iterator entityIter;
+
                 if (this.getSettings().get(4).toMode().mode != 0)
                 {
-                    var5 = this.mc.world.loadedEntityList.iterator();
+                    entityIter = this.mc.world.loadedEntityList.iterator();
 
-                    while (var5.hasNext())
+                    while (entityIter.hasNext())
                     {
-                        Entity e = (Entity) var5.next();
+                        Entity e = (Entity) entityIter.next();
+
                         if (e instanceof EntityEnderCrystal)
                         {
                             double d = this.mc.player.getDistance(e);
+
                             if (d <= this.getSettings().get(5).toSlider().getValue() && (this.getSettings().get(4).toMode().mode == 1 || this.getSettings().get(4).toMode().mode == 2 && this.getTotems() <= (int) this.getSettings().get(3).toSlider().getValue() || this.getSettings().get(4).toMode().mode == 3 && (double) this.mc.player.getHealth() < this.getSettings().get(1).toSlider().getValue()))
                             {
                                 this.logOut("Logged Out " + d + " Blocks Away From A Crystal");
+
                                 return;
                             }
                         }
@@ -68,12 +72,13 @@ public class AutoLog extends Module
 
                 if (this.getSettings().get(6).toToggle().state)
                 {
-                    var5 = this.mc.world.playerEntities.iterator();
+                    entityIter = this.mc.world.playerEntities.iterator();
 
-                    while (var5.hasNext())
+                    while (entityIter.hasNext())
                     {
-                        EntityPlayer e = (EntityPlayer) var5.next();
-                        if (e.getName() != this.mc.player.getName() && (double) this.mc.player.getDistance(e) <= this.getSettings().get(7).toSlider().getValue())
+                        EntityPlayer e = (EntityPlayer) entityIter.next();
+
+                        if (!e.getName().equals(this.mc.player.getName()) && (double) this.mc.player.getDistance(e) <= this.getSettings().get(7).toSlider().getValue())
                         {
                             this.logOut("Logged Out " + this.mc.player.getDistance(e) + " Blocks Away From A Player (" + e.getName() + ")");
                         }

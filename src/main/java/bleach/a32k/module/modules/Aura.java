@@ -35,7 +35,7 @@ public class Aura extends Module
 
         if (!this.getSettings().get(0).toToggle().state || this.mc.player.getHeldItemMainhand().getItem() instanceof ItemSword || this.mc.player.getHeldItemMainhand().getItem() instanceof ItemAxe)
         {
-            Iterator var2 = this.mc.world.playerEntities.iterator();
+            Iterator playerIter = this.mc.world.playerEntities.iterator();
 
             while (true)
             {
@@ -56,12 +56,12 @@ public class Aura extends Module
                                     {
                                         do
                                         {
-                                            if (!var2.hasNext())
+                                            if (!playerIter.hasNext())
                                             {
                                                 return;
                                             }
 
-                                            e = (EntityPlayer) var2.next();
+                                            e = (EntityPlayer) playerIter.next();
                                         } while ((double) this.mc.player.getDistance(e) > this.getSettings().get(4).toSlider().getValue());
                                     } while (e.getHealth() <= 0.0F);
                                 } while (e == this.mc.player);

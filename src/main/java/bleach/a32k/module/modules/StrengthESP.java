@@ -45,15 +45,15 @@ public class StrengthESP extends Module
                     int count = 0;
                     int playerCount = 0;
 
-                    ArrayDeque[][] var3 = (ArrayDeque[][]) ReflectUtils.getField(ParticleManager.class, "fxLayers", "fxLayers").get(this.mc.effectRenderer);
+                    ArrayDeque[][] deques = (ArrayDeque[][]) ReflectUtils.getField(ParticleManager.class, "fxLayers", "fxLayers").get(this.mc.effectRenderer);
 
-                    for (ArrayDeque[] p2 : var3)
+                    for (ArrayDeque[] p2 : deques)
                     {
                         label82:
 
                         for (ArrayDeque p1 : p2)
                         {
-                            Iterator var11 = p1.iterator();
+                            Iterator iter = p1.iterator();
 
                             label79:
 
@@ -66,12 +66,12 @@ public class StrengthESP extends Module
                                     {
                                         do
                                         {
-                                            if (!var11.hasNext())
+                                            if (!iter.hasNext())
                                             {
                                                 continue label82;
                                             }
 
-                                            p = (Particle) var11.next();
+                                            p = (Particle) iter.next();
                                         } while (p == null);
                                     } while (!(p instanceof ParticleSpell));
 
