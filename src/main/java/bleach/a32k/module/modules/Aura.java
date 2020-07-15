@@ -30,7 +30,9 @@ public class Aura extends Module
     public void onUpdate()
     {
         ++this.delay;
+
         int reqDelay = (int) Math.round(20.0D / this.getSettings().get(5).toSlider().getValue());
+
         if (!this.getSettings().get(0).toToggle().state || this.mc.player.getHeldItemMainhand().getItem() instanceof ItemSword || this.mc.player.getHeldItemMainhand().getItem() instanceof ItemAxe)
         {
             Iterator var2 = this.mc.world.playerEntities.iterator();
@@ -38,6 +40,8 @@ public class Aura extends Module
             while (true)
             {
                 EntityPlayer e;
+
+                // holy shit
                 do
                 {
                     do
@@ -69,15 +73,12 @@ public class Aura extends Module
                 if (this.getSettings().get(3).toToggle().state)
                 {
                     Random rng = new Random();
-                    double n = 1.282622531E-314D;
-                    double n2 = 1.282622531E-314D + 1.282622531E-314D * (1.0D + (double) rng.nextInt(rng.nextBoolean() ? 34 : 43));
-                    double[] array = new double[] {1.531232163E-314D + n2, 0.0D, 1.135895857E-315D + n2, 0.0D};
-                    double[] var10 = array;
-                    int var11 = array.length;
 
-                    for (int var12 = 0; var12 < var11; ++var12)
+                    double n = 1.282622531E-314D + 1.282622531E-314D * (1.0D + (double) rng.nextInt(rng.nextBoolean() ? 34 : 43));
+                    double[] array = new double[] {1.531232163E-314D + n, 0.0D, 1.135895857E-315D + n, 0.0D};
+
+                    for (double d : array)
                     {
-                        double d = var10[var12];
                         this.mc.player.connection.sendPacket(new Position(this.mc.player.posX, this.mc.player.posY + d, this.mc.player.posZ, false));
                     }
                 }
@@ -85,6 +86,7 @@ public class Aura extends Module
                 this.mc.player.connection.sendPacket(new CPacketUseEntity(e, EnumHand.MAIN_HAND));
                 this.mc.playerController.attackEntity(this.mc.player, e);
                 this.mc.player.swingArm(EnumHand.MAIN_HAND);
+
                 this.delay = 0;
             }
         }

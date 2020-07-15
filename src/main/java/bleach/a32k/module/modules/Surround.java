@@ -11,7 +11,6 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class Surround extends Module
@@ -26,18 +25,22 @@ public class Surround extends Module
         int obsidian = -1;
 
         int cap;
+
         for (cap = 0; cap < 9; ++cap)
         {
             if (this.mc.player.inventory.getStackInSlot(cap).getItem() == Item.getItemFromBlock(Blocks.OBSIDIAN))
             {
                 obsidian = cap;
+
                 break;
             }
         }
 
         cap = 0;
-        List<BlockPos> poses = new ArrayList();
+        List<BlockPos> poses = new ArrayList<>();
+
         boolean rotate = this.getSettings().get(3).toToggle().state;
+
         if (this.getSettings().get(0).toMode().mode == 0)
         {
             poses.addAll(Arrays.asList((new BlockPos(this.mc.player.getPositionVector())).add(0, 0, 1), (new BlockPos(this.mc.player.getPositionVector())).add(1, 0, 0), (new BlockPos(this.mc.player.getPositionVector())).add(0, 0, -1), (new BlockPos(this.mc.player.getPositionVector())).add(-1, 0, 0)));
@@ -49,12 +52,11 @@ public class Surround extends Module
             poses.addAll(Arrays.asList((new BlockPos(this.mc.player.getPositionVector().add(0.0D, 0.0D, -this.mc.player.width))).add(0, 0, -1), (new BlockPos(this.mc.player.getPositionVector().add(-this.mc.player.width, 0.0D, 0.0D))).add(-1, 0, 0), (new BlockPos(this.mc.player.getPositionVector().add(0.0D, 0.0D, this.mc.player.width))).add(0, 0, 1), (new BlockPos(this.mc.player.getPositionVector().add(this.mc.player.width, 0.0D, 0.0D))).add(1, 0, 0)));
         }
 
-        Iterator var5 = (new ArrayList(poses)).iterator();
-
-        while (var5.hasNext())
+        for (Object o : new ArrayList<>(poses))
         {
-            BlockPos b = (BlockPos) var5.next();
+            BlockPos b = (BlockPos) o;
             poses.add(0, b.down());
+
             if (this.getSettings().get(2).toToggle().state)
             {
                 poses.add(0, b.up());
@@ -64,11 +66,9 @@ public class Surround extends Module
         if (obsidian != -1)
         {
             int hand = this.mc.player.inventory.currentItem;
-            Iterator var9 = poses.iterator();
 
-            while (var9.hasNext())
+            for (BlockPos b : poses)
             {
-                BlockPos b = (BlockPos) var9.next();
                 if (WorldUtils.placeBlock(b, obsidian, rotate, false))
                 {
                     ++cap;
@@ -85,6 +85,5 @@ public class Surround extends Module
                 this.mc.player.inventory.currentItem = hand;
             }
         }
-
     }
 }

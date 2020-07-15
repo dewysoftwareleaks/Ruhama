@@ -9,6 +9,6 @@ public class RuhamaOntop extends Module
 {
     public RuhamaOntop()
     {
-        super("RuhamaOntop", 0, Category.MISC, "Ruhama best client", null);
+        super("RuhamaBad", 0, Category.MISC, "legit trash skid", null);
     }
 }

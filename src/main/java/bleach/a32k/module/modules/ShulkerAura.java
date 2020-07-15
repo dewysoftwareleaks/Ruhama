@@ -19,7 +19,7 @@ import java.util.Map.Entry;
 public class ShulkerAura extends Module
 {
     public boolean inShulker = false;
-    public HashMap<BlockPos, Integer> openedShulkers = new HashMap();
+    public HashMap<BlockPos, Integer> openedShulkers = new HashMap<>();
 
     public ShulkerAura()
     {
@@ -28,12 +28,14 @@ public class ShulkerAura extends Module
 
     public void onUpdate()
     {
-        HashMap<BlockPos, Integer> tempShulkers = new HashMap(this.openedShulkers);
+        HashMap<BlockPos, Integer> tempShulkers = new HashMap<>(this.openedShulkers);
 
         Entry e;
-        for (Iterator var2 = this.openedShulkers.entrySet().iterator(); var2.hasNext(); tempShulkers.replace((BlockPos) e.getKey(), (Integer) e.getValue() - 1))
+
+        for (Iterator shulkerIter = this.openedShulkers.entrySet().iterator(); shulkerIter.hasNext(); tempShulkers.replace((BlockPos) e.getKey(), (Integer) e.getValue() - 1))
         {
-            e = (Entry) var2.next();
+            e = (Entry) shulkerIter.next();
+
             if ((Integer) e.getValue() <= 0)
             {
                 tempShulkers.remove(e.getKey());
@@ -42,6 +44,7 @@ public class ShulkerAura extends Module
 
         this.openedShulkers.clear();
         this.openedShulkers.putAll(tempShulkers);
+
         if (!(this.mc.currentScreen instanceof GuiContainer) || this.mc.currentScreen instanceof GuiShulkerBox)
         {
             if (this.mc.currentScreen instanceof GuiShulkerBox)
@@ -61,11 +64,14 @@ public class ShulkerAura extends Module
                         for (int z = -4; z <= 4; ++z)
                         {
                             BlockPos pos = this.mc.player.getPosition().add(x, y, z);
+
                             if (this.mc.world.getBlockState(pos).getBlock() instanceof BlockShulkerBox && !Ruhama.friendBlocks.containsKey(pos) && !this.openedShulkers.containsKey(pos) && this.mc.player.getPositionVector().distanceTo((new Vec3d(pos)).add(0.5D, 0.5D, 0.5D)) <= 5.25D)
                             {
                                 WorldUtils.openBlock(pos);
+
                                 this.openedShulkers.put(pos, 300);
                                 this.inShulker = true;
+
                                 return;
                             }
                         }

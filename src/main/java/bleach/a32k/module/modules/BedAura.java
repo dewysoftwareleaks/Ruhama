@@ -20,6 +20,7 @@ import net.minecraft.world.Explosion;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class BedAura extends Module
 {
@@ -34,15 +35,20 @@ public class BedAura extends Module
     {
     }
 
+    // this module does nothing btw but imma leave these
     public float calculateDamage(double posX, double posY, double posZ, Entity entity)
     {
         double doubleExplosionSize = 12.0D;
         double distancedsize = entity.getDistance(posX, posY, posZ) / doubleExplosionSize;
+
         Vec3d vec3d = new Vec3d(posX, posY, posZ);
+
         double blockDensity = entity.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
         double v = (1.0D - distancedsize) * blockDensity;
+
         float damage = (float) ((int) ((v * v + v) / 2.0D * 9.0D * doubleExplosionSize + 1.0D));
         double finald = 1.0D;
+
         if (entity instanceof EntityLivingBase)
         {
             finald = this.getBlastReduction((EntityLivingBase) entity, this.getDamageMultiplied(damage), new Explosion(this.mc.world, null, posX, posY, posZ, 6.0F, false, true));
@@ -57,11 +63,15 @@ public class BedAura extends Module
         {
             EntityPlayer ep = (EntityPlayer) entity;
             DamageSource ds = DamageSource.causeExplosionDamage(explosion);
+
             damage = CombatRules.getDamageAfterAbsorb(damage, (float) ep.getTotalArmorValue(), (float) ep.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
+
             int k = EnchantmentHelper.getEnchantmentModifierDamage(ep.getArmorInventoryList(), ds);
             float f = MathHelper.clamp((float) k, 0.0F, 20.0F);
+
             damage *= 1.0F - f / 25.0F;
-            if (entity.isPotionActive(Potion.getPotionById(11)))
+
+            if (entity.isPotionActive(Objects.requireNonNull(Potion.getPotionById(11))))
             {
                 damage -= damage / 4.0F;
             }

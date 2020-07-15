@@ -7,12 +7,12 @@ import bleach.a32k.settings.SettingToggle;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.TextFormatting;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class NBTViewer extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingToggle(false, "Mobs Only"));
+    private static final List<SettingBase> settings = Collections.singletonList(new SettingToggle(false, "Mobs Only"));
 
     public NBTViewer()
     {
@@ -22,36 +22,32 @@ public class NBTViewer extends Module
     public void onOverlay()
     {
         Entity e = this.mc.objectMouseOver.entityHit;
+
         if (e != null)
         {
             String[] text = e.serializeNBT().toString().split("(?=((\\{)|(?<=\\G.{100})))");
+
             int count = 30;
             boolean color1 = true;
-            String[] var5 = text;
-            int var6 = text.length;
 
-            for (int var7 = 0; var7 < var6; ++var7)
+            for (String s : text)
             {
-                String s = var5[var7];
-                String s1 = "";
-                char[] var10 = (s).toCharArray();
-                int var11 = var10.length;
+                StringBuilder s1 = new StringBuilder();
+                char[] textChars = (s).toCharArray();
 
-                for (int var12 = 0; var12 < var11; ++var12)
+                for (Character c : textChars)
                 {
-                    Character c = var10[var12];
                     if (c.toString().contains("{"))
                     {
                         color1 = !color1;
                     }
 
-                    s1 = s1 + (color1 ? TextFormatting.LIGHT_PURPLE.toString() : TextFormatting.DARK_PURPLE.toString()) + c;
+                    s1.append(color1 ? TextFormatting.LIGHT_PURPLE.toString() : TextFormatting.DARK_PURPLE.toString()).append(c);
                 }
 
-                this.mc.fontRenderer.drawStringWithShadow(s1, 40.0F, (float) count, -1);
+                this.mc.fontRenderer.drawStringWithShadow(s1.toString(), 40.0F, (float) count, -1);
                 count += 10;
             }
-
         }
     }
 }

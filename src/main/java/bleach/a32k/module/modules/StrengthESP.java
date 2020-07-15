@@ -16,7 +16,7 @@ import java.util.Map.Entry;
 public class StrengthESP extends Module
 {
     private final List<List<Float>> effects = Arrays.asList(Arrays.asList(0.5764706F, 0.14117648F, 0.13725491F), Arrays.asList(0.48235294F, 0.3137255F, 0.4627451F), Arrays.asList(0.4F, 0.3019608F, 0.4117647F), Arrays.asList(0.65882355F, 0.28627452F, 0.18039216F), Arrays.asList(0.6666667F, 0.34509805F, 0.1764706F), Arrays.asList(0.7137255F, 0.44705883F, 0.2F), Arrays.asList(0.5411765F, 0.3882353F, 0.43137255F), Arrays.asList(0.49019608F, 0.39215687F, 0.38431373F), Arrays.asList(0.72156864F, 0.44313726F, 0.20784314F), Arrays.asList(0.5137255F, 0.3529412F, 0.44705883F), Arrays.asList(0.4509804F, 0.3529412F, 0.39607844F), Arrays.asList(0.69803923F, 0.38039216F, 0.19607843F));
-    private final HashMap<Entity, Integer> players = new HashMap();
+    private final HashMap<Entity, Integer> players = new HashMap<>();
 
     public StrengthESP()
     {
@@ -27,17 +27,14 @@ public class StrengthESP extends Module
     {
         if (this.mc.currentScreen == null)
         {
-            Iterator var1 = (new HashMap(this.players)).entrySet().iterator();
-
-            while (var1.hasNext())
+            for (Entry<Entity, Integer> entityIntegerEntry : (new HashMap<>(this.players)).entrySet())
             {
-                Entry<Entity, Integer> e = (Entry) var1.next();
-                if (e.getValue() <= 0)
+                if (entityIntegerEntry.getValue() <= 0)
                 {
-                    this.players.remove(e.getKey());
+                    this.players.remove(entityIntegerEntry.getKey());
                 } else
                 {
-                    this.players.replace(e.getKey(), e.getValue() - 1);
+                    this.players.replace(entityIntegerEntry.getKey(), entityIntegerEntry.getValue() - 1);
                 }
             }
 
@@ -47,22 +44,19 @@ public class StrengthESP extends Module
                 {
                     int count = 0;
                     int playerCount = 0;
+
                     ArrayDeque[][] var3 = (ArrayDeque[][]) ReflectUtils.getField(ParticleManager.class, "fxLayers", "fxLayers").get(this.mc.effectRenderer);
-                    int var4 = var3.length;
 
-                    for (int var5 = 0; var5 < var4; ++var5)
+                    for (ArrayDeque[] p2 : var3)
                     {
-                        ArrayDeque<Particle>[] p2 = var3[var5];
-                        ArrayDeque[] var7 = p2;
-                        int var8 = p2.length;
-
                         label82:
-                        for (int var9 = 0; var9 < var8; ++var9)
+
+                        for (ArrayDeque p1 : p2)
                         {
-                            ArrayDeque<Particle> p1 = var7[var9];
                             Iterator var11 = p1.iterator();
 
                             label79:
+
                             do
                             {
                                 while (true)
@@ -87,16 +81,15 @@ public class StrengthESP extends Module
                                     }
 
                                     ++count;
-                                    Vec3d pos = new Vec3d((Double) ReflectUtils.getField(Particle.class, "posX", "posX").get(p), (Double) ReflectUtils.getField(Particle.class, "posY", "posY").get(p), (Double) ReflectUtils.getField(Particle.class, "posZ", "posZ").get(p));
-                                    Iterator var14 = this.mc.world.playerEntities.iterator();
+                                    Vec3d pos = new Vec3d((Double) Objects.requireNonNull(ReflectUtils.getField(Particle.class, "posX", "posX")).get(p), (Double) Objects.requireNonNull(ReflectUtils.getField(Particle.class, "posY", "posY")).get(p), (Double) Objects.requireNonNull(ReflectUtils.getField(Particle.class, "posZ", "posZ")).get(p));
 
-                                    while (var14.hasNext())
+                                    for (net.minecraft.entity.player.EntityPlayer entityPlayer : this.mc.world.playerEntities)
                                     {
-                                        Entity e = (Entity) var14.next();
-                                        if (e != this.mc.player && !this.players.containsKey(e) && pos.distanceTo(e.getPositionVector()) < 2.0D && this.effects.contains(Arrays.asList(p.getRedColorF(), p.getGreenColorF(), p.getBlueColorF())))
+                                        if ( entityPlayer != this.mc.player && !this.players.containsKey(entityPlayer) && pos.distanceTo((entityPlayer).getPositionVector()) < 2.0D && this.effects.contains(Arrays.asList(p.getRedColorF(), p.getGreenColorF(), p.getBlueColorF())))
                                         {
-                                            this.players.put(e, 10);
+                                            this.players.put(entityPlayer, 10);
                                             ++playerCount;
+
                                             continue label79;
                                         }
                                     }
@@ -106,11 +99,10 @@ public class StrengthESP extends Module
                             return;
                         }
                     }
-                } catch (Exception var16)
+                } catch (Exception e)
                 {
-                    var16.printStackTrace();
+                    e.printStackTrace();
                 }
-
             }
         }
     }
@@ -119,9 +111,9 @@ public class StrengthESP extends Module
     {
         int c = Gui.arrayListEnd + 15;
 
-        for (Iterator var2 = this.players.entrySet().iterator(); var2.hasNext(); c += 10)
+        for (Iterator playersIter = this.players.entrySet().iterator(); playersIter.hasNext(); c += 10)
         {
-            Entry<Entity, Integer> e = (Entry) var2.next();
+            Entry<Entity, Integer> e = (Entry) playersIter.next();
             this.mc.fontRenderer.drawStringWithShadow(e.getKey().getName(), 2.0F, (float) c, 12591136);
         }
 
@@ -135,13 +127,9 @@ public class StrengthESP extends Module
 
     public void onRender()
     {
-        Iterator var1 = this.players.entrySet().iterator();
-
-        while (var1.hasNext())
+        for (Entry<Entity, Integer> entityIntegerEntry : this.players.entrySet())
         {
-            Entry<Entity, Integer> e = (Entry) var1.next();
-            RenderUtils.drawFilledBlockBox(e.getKey().getEntityBoundingBox(), 1.0F, 0.0F, 0.0F, 0.3F);
+            RenderUtils.drawFilledBlockBox(entityIntegerEntry.getKey().getEntityBoundingBox(), 1.0F, 0.0F, 0.0F, 0.3F);
         }
-
     }
 }

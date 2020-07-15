@@ -12,13 +12,14 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 public class ObsidianTrap extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingToggle(false, "2b Bypass"));
+    private static final List<SettingBase> settings = Collections.singletonList(new SettingToggle(false, "2b Bypass"));
+
     BlockPos blockpos1;
     BlockPos blockpos2;
     BlockPos blockpos3;
@@ -29,8 +30,8 @@ public class ObsidianTrap extends Module
     BlockPos blockpos8;
     BlockPos blockpos9;
     BlockPos blockpos10;
+
     private EntityPlayer target;
-    private List<EntityPlayer> targets;
 
     public ObsidianTrap()
     {
@@ -44,25 +45,7 @@ public class ObsidianTrap extends Module
 
     public boolean isValid(EntityPlayer entity)
     {
-        return entity instanceof EntityPlayer && this.isInBlockRange(entity) && entity.getHealth() > 0.0F && !entity.isDead;
-    }
-
-    public void loadTargets()
-    {
-        Iterator var1 = this.mc.world.playerEntities.iterator();
-
-        while (var1.hasNext())
-        {
-            EntityPlayer player = (EntityPlayer) var1.next();
-            if (!(player instanceof EntityPlayerSP))
-            {
-                if (this.isValid(player))
-                {
-                    this.targets.add(player);
-                } else this.targets.remove(player);
-            }
-        }
-
+        return entity != null && this.isInBlockRange(entity) && entity.getHealth() > 0.0F && !entity.isDead;
     }
 
     private boolean isStackObby(ItemStack stack)
@@ -75,7 +58,8 @@ public class ObsidianTrap extends Module
         for (int i = 36; i < 45; ++i)
         {
             ItemStack stack = this.mc.player.inventoryContainer.getSlot(i).getStack();
-            if (stack != null && this.isStackObby(stack))
+
+            if (this.isStackObby(stack))
             {
                 return true;
             }
@@ -93,12 +77,13 @@ public class ObsidianTrap extends Module
                 this.updateTarget();
             }
 
-            Iterator var1 = this.mc.world.playerEntities.iterator();
+            Iterator<EntityPlayer> playerIter = this.mc.world.playerEntities.iterator();
 
             EntityPlayer player;
+
             do
             {
-                if (!var1.hasNext())
+                if (!playerIter.hasNext())
                 {
                     if (this.isValid(this.target) && this.mc.player.getDistance(this.target) < 4.0F)
                     {
@@ -108,7 +93,7 @@ public class ObsidianTrap extends Module
                     return;
                 }
 
-                player = (EntityPlayer) var1.next();
+                player = playerIter.next();
             } while (player instanceof EntityPlayerSP || !this.isValid(player) || player.getDistance(this.mc.player) >= this.target.getDistance(this.mc.player));
 
             this.target = player;
@@ -133,12 +118,15 @@ public class ObsidianTrap extends Module
             for (int i = 36; i < 45; ++i)
             {
                 ItemStack stack = this.mc.player.inventoryContainer.getSlot(i).getStack();
-                if (stack != null && this.isStackObby(stack))
+
+                if (this.isStackObby(stack))
                 {
                     int oldSlot = this.mc.player.inventory.currentItem;
+
                     if (this.mc.world.getBlockState(this.blockpos1).getMaterial().isReplaceable() || this.mc.world.getBlockState(this.blockpos3).getMaterial().isReplaceable() || this.mc.world.getBlockState(this.blockpos4).getMaterial().isReplaceable() || this.mc.world.getBlockState(this.blockpos5).getMaterial().isReplaceable() || this.mc.world.getBlockState(this.blockpos6).getMaterial().isReplaceable())
                     {
                         this.mc.player.inventory.currentItem = i - 36;
+
                         if (this.mc.world.getBlockState(this.blockpos3).getMaterial().isReplaceable())
                         {
                             WorldUtils.placeBlock(this.blockpos3, this.mc.player.inventory.currentItem, this.getSettings().get(0).toToggle().state, false);
@@ -195,7 +183,6 @@ public class ObsidianTrap extends Module
                 }
             }
         }
-
     }
 
     public void onDisable()
@@ -205,16 +192,12 @@ public class ObsidianTrap extends Module
 
     public void updateTarget()
     {
-        Iterator var1 = this.mc.world.playerEntities.iterator();
-
-        while (var1.hasNext())
+        for (EntityPlayer player : this.mc.world.playerEntities)
         {
-            EntityPlayer player = (EntityPlayer) var1.next();
-            if (!(player instanceof EntityPlayerSP) && !(player instanceof EntityPlayerSP) && this.isValid(player))
+            if (!(player instanceof EntityPlayerSP) && this.isValid(player))
             {
                 this.target = player;
             }
         }
-
     }
 }

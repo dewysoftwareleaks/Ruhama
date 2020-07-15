@@ -13,8 +13,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import java.util.List;
-
 public class HopperNuker extends Module
 {
     public int breakingSlot = 0;
@@ -61,6 +59,7 @@ public class HopperNuker extends Module
                         for (int z = -4; z <= 4; ++z)
                         {
                             BlockPos pos = this.mc.player.getPosition().add(x, y, z);
+
                             if (this.mc.world.getBlockState(pos).getBlock() instanceof BlockHopper && this.mc.world.getBlockState(pos.up()).getBlock() instanceof BlockShulkerBox && !Ruhama.friendBlocks.containsKey(pos) && this.mc.player.getPositionVector().distanceTo((new Vec3d(pos)).add(0.5D, 0.5D, 0.5D)) <= 5.25D)
                             {
                                 this.mc.player.inventory.currentItem = pickaxeSlot;

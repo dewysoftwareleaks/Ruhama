@@ -13,7 +13,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAir;
 import net.minecraft.item.ItemShulkerBox;
@@ -25,14 +24,18 @@ import net.minecraft.util.math.RayTraceResult;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Auto32k extends Module
 {
     private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", "Auto", "Looking"), new SettingMode("Protect: ", "Off", "Hopper", "Obby"), new SettingToggle(true, "Aura"), new SettingSlider(0.0D, 20.0D, 10.0D, 0, "CPS: "), new SettingMode("CPS: ", "Clicks/Sec", "Clicks/Tick", "Tick Delay"), new SettingToggle(false, "SafeShuker"), new SettingToggle(false, "AntiAim"), new SettingToggle(true, "2b Bypass"));
+
     private BlockPos placedHopperPos;
+
     private boolean ready;
     private boolean active;
     private boolean tickPassed;
+
     private int timer = 0;
 
     public Auto32k()
@@ -43,11 +46,13 @@ public class Auto32k extends Module
     public void onEnable()
     {
         this.tickPassed = false;
+
         int obsidian = -1;
         int shulker = -1;
         int hopper = -1;
 
         int cap2;
+
         for (cap2 = 0; cap2 < 9; ++cap2)
         {
             if (this.mc.player.inventory.getStackInSlot(cap2).getItem() == Item.getItemFromBlock(Blocks.HOPPER))
@@ -70,10 +75,11 @@ public class Auto32k extends Module
         {
             int y;
             int x;
+
             if (this.getSettings().get(0).toMode().mode == 1)
             {
                 RayTraceResult ray = this.mc.player.rayTrace(4.25D, this.mc.getRenderPartialTicks());
-                if (WorldUtils.isBlockEmpty(ray.getBlockPos()))
+                if (WorldUtils.isBlockEmpty(Objects.requireNonNull(ray).getBlockPos()))
                 {
                     return;
                 }
@@ -81,11 +87,13 @@ public class Auto32k extends Module
                 WorldUtils.placeBlock(ray.getBlockPos().up(), hopper, this.getSettings().get(7).toToggle().state, false);
                 WorldUtils.placeBlock(ray.getBlockPos().up(2), shulker, this.getSettings().get(7).toToggle().state, false);
                 WorldUtils.openBlock(ray.getBlockPos().up());
+
                 this.placedHopperPos = ray.getBlockPos().up();
                 this.ready = true;
             } else
             {
-                label142:
+                fernflowerMoment:
+
                 for (cap2 = -2; cap2 <= 2; ++cap2)
                 {
                     for (y = -1; y <= 2; ++y)
@@ -95,12 +103,15 @@ public class Auto32k extends Module
                             if ((cap2 != 0 || y != 0 || x != 0) && (cap2 != 0 || y != 1 || x != 0) && WorldUtils.isBlockEmpty(this.mc.player.getPosition().add(cap2, y, x)) && this.mc.player.getPositionEyes(this.mc.getRenderPartialTicks()).distanceTo(this.mc.player.getPositionVector().add((double) cap2 + 0.5D, (double) y + 0.5D, (double) x + 0.5D)) < 4.5D && WorldUtils.isBlockEmpty(this.mc.player.getPosition().add(cap2, y + 1, x)) && this.mc.player.getPositionEyes(this.mc.getRenderPartialTicks()).distanceTo(this.mc.player.getPositionVector().add((double) cap2 + 0.5D, (double) y + 1.5D, (double) x + 0.5D)) < 4.5D)
                             {
                                 boolean r = this.getSettings().get(7).toToggle().state;
+
                                 WorldUtils.placeBlock(this.mc.player.getPosition().add(cap2, y, x), hopper, r, false);
                                 WorldUtils.placeBlock(this.mc.player.getPosition().add(cap2, y + 1, x), shulker, r, false);
                                 WorldUtils.openBlock(this.mc.player.getPosition().add(cap2, y, x));
+
                                 this.placedHopperPos = this.mc.player.getPosition().add(cap2, y, x);
                                 this.ready = true;
-                                break label142;
+
+                                break fernflowerMoment;
                             }
                         }
                     }
@@ -112,6 +123,7 @@ public class Auto32k extends Module
                 if (this.getSettings().get(1).toMode().mode != 0)
                 {
                     cap2 = 0;
+
                     this.mc.player.inventory.currentItem = this.getSettings().get(1).toMode().mode == 1 ? hopper : obsidian;
 
                     for (y = -1; y <= 1; ++y)
@@ -123,6 +135,7 @@ public class Auto32k extends Module
                                 if ((x != 0 || z != 0) && (x == 0 || z == 0) && WorldUtils.placeBlock(this.placedHopperPos.add(x, y, z), this.mc.player.inventory.currentItem, this.getSettings().get(7).toToggle().state, false))
                                 {
                                     ++cap2;
+
                                     if (cap2 > (this.getSettings().get(1).toMode().mode == 1 ? 1 : 2))
                                     {
                                         return;
@@ -170,9 +183,11 @@ public class Auto32k extends Module
         }
 
         this.tickPassed = true;
+
         if (this.mc.currentScreen instanceof GuiHopper)
         {
             GuiHopper gui = (GuiHopper) this.mc.currentScreen;
+
             if (this.ready)
             {
                 this.active = true;
@@ -180,6 +195,7 @@ public class Auto32k extends Module
             }
 
             int slot;
+
             for (slot = 32; slot <= 40; ++slot)
             {
                 if (EnchantmentHelper.getEnchantmentLevel(Enchantments.SHARPNESS, gui.inventorySlots.getSlot(slot).getStack()) > 5)
@@ -206,6 +222,7 @@ public class Auto32k extends Module
             if (!(gui.inventorySlots.inventorySlots.get(0).getStack().getItem() instanceof ItemAir) && this.active)
             {
                 slot = this.mc.player.inventory.currentItem;
+
                 boolean pull = false;
 
                 for (int i = 40; i >= 32; --i)
@@ -214,6 +231,7 @@ public class Auto32k extends Module
                     {
                         slot = i;
                         pull = true;
+
                         break;
                     }
                 }
@@ -240,17 +258,16 @@ public class Auto32k extends Module
 
             try
             {
-                List<Entity> players = new ArrayList(this.mc.world.playerEntities);
+                List<Entity> players = new ArrayList<>(this.mc.world.playerEntities);
                 players.remove(this.mc.player);
-                players.sort((a, b) ->
-                {
-                    return Float.compare(a.getDistance(this.mc.player), b.getDistance(this.mc.player));
-                });
+
+                players.sort((a, b) -> Float.compare(a.getDistance(this.mc.player), b.getDistance(this.mc.player)));
+
                 if (players.get(0).getDistance(this.mc.player) < 8.0F)
                 {
                     target = players.get(0);
                 }
-            } catch (Exception var4)
+            } catch (Exception ignored)
             {
             }
 
@@ -260,6 +277,7 @@ public class Auto32k extends Module
             }
 
             WorldUtils.rotateClient(target.posX, target.posY + 1.0D, target.posZ);
+
             if (target.getDistance(this.mc.player) > 6.0F)
             {
                 return;
@@ -268,6 +286,5 @@ public class Auto32k extends Module
             this.mc.playerController.attackEntity(this.mc.player, target);
             this.mc.player.swingArm(EnumHand.MAIN_HAND);
         }
-
     }
 }

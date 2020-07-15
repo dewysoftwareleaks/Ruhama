@@ -9,6 +9,7 @@ import net.minecraft.inventory.ClickType;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class InvSorter extends Module
 {
@@ -23,9 +24,11 @@ public class InvSorter extends Module
     {
         FileMang.createFile("invsorter.txt");
         this.items = FileMang.readFileLines("invsorter.txt");
+
         if (this.items.size() < 9)
         {
             RuhamaLogger.log("No Inventory Saved, Use /invsorter to save your hotbar");
+
             this.setToggled(false);
         }
     }
@@ -33,36 +36,34 @@ public class InvSorter extends Module
     public void onUpdate()
     {
         int index = -1;
-        int done = 0;
-        Iterator var3 = this.items.iterator();
+
+        Iterator<String> itemsIter = this.items.iterator();
 
         while (true)
         {
             String s;
+
             do
             {
                 do
                 {
-                    if (!var3.hasNext())
+                    if (!itemsIter.hasNext())
                     {
-                        if (done == 0)
-                        {
-                            this.setToggled(false);
-                        }
+                        this.setToggled(false);
 
                         return;
                     }
 
-                    s = (String) var3.next();
+                    s = itemsIter.next();
                     ++index;
-                } while (s == "");
-            } while (s.equals(this.mc.player.inventory.getStackInSlot(index).getItem().getRegistryName().toString()));
+                } while (s.equals(""));
+            } while (s.equals(Objects.requireNonNull(this.mc.player.inventory.getStackInSlot(index).getItem().getRegistryName()).toString()));
 
             for (int i = 9; i <= 45; ++i)
             {
-                if (this.mc.player.inventory.getStackInSlot(i).getItem().getRegistryName().toString().equals(s))
+                if (Objects.requireNonNull(this.mc.player.inventory.getStackInSlot(i).getItem().getRegistryName()).toString().equals(s))
                 {
-                    if (s.equals(Items.AIR.getRegistryName().toString()))
+                    if (s.equals(Objects.requireNonNull(Items.AIR.getRegistryName()).toString()))
                     {
                         this.mc.playerController.windowClick(this.mc.player.inventoryContainer.windowId, 36 + index, 0, ClickType.QUICK_MOVE, this.mc.player);
                     } else if (this.mc.player.inventory.getStackInSlot(index).getItem() == Items.AIR)
@@ -76,7 +77,6 @@ public class InvSorter extends Module
                         this.mc.playerController.windowClick(this.mc.player.inventoryContainer.windowId, i, 0, ClickType.PICKUP, this.mc.player);
                     }
 
-                    int var6 = done + 1;
                     return;
                 }
             }

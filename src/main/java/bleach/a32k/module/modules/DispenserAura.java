@@ -21,12 +21,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class DispenserAura extends Module
 {
     private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", "Block", "Mine"), new SettingToggle(true, "2b Bypass"));
+
     public int breakingSlot = 0;
     public BlockPos breakingBlock;
 
@@ -40,14 +40,13 @@ public class DispenserAura extends Module
         if (!(this.mc.currentScreen instanceof GuiContainer))
         {
             TileEntityDispenser dispenser = null;
-            Iterator var2 = this.mc.world.loadedTileEntityList.iterator();
 
-            while (var2.hasNext())
+            for (TileEntity t : this.mc.world.loadedTileEntityList)
             {
-                TileEntity t = (TileEntity) var2.next();
                 if (t instanceof TileEntityDispenser && this.mc.player.getDistance((double) t.getPos().getX() + 0.5D, (double) t.getPos().getY() + 0.5D, (double) t.getPos().getZ() + 0.5D) <= (this.getSettings().get(0).toMode().mode == 0 ? 4.5D : 5.5D))
                 {
                     dispenser = (TileEntityDispenser) t;
+
                     break;
                 }
             }
@@ -55,22 +54,22 @@ public class DispenserAura extends Module
             if (dispenser != null)
             {
                 int i;
+
                 if (this.getSettings().get(0).toMode().mode == 0)
                 {
                     BlockPos jamPos = dispenser.getPos().offset(this.mc.world.getBlockState(dispenser.getPos()).getValue(PropertyDirection.create("facing")));
+
                     if (this.mc.player.getDistance((double) jamPos.getX() + 0.5D, (double) jamPos.getY() + 0.5D, (double) jamPos.getZ() + 0.5D) > 4.25D)
                     {
                         return;
                     }
 
-                    i = 0;
-
                     for (i = 0; i <= 8; ++i)
                     {
                         Item item = this.mc.player.inventory.getStackInSlot(i).getItem();
+
                         if (item instanceof ItemBlock && !(((ItemBlock) item).getBlock() instanceof BlockShulkerBox) && ((ItemBlock) item).getBlock().getDefaultState().isFullCube())
                         {
-                            i = i;
                             break;
                         }
                     }
@@ -91,10 +90,12 @@ public class DispenserAura extends Module
                     if (this.breakingBlock != null)
                     {
                         this.mc.player.inventory.currentItem = this.mc.world.getBlockState(this.breakingBlock).getBlock() == Blocks.AIR ? this.breakingSlot : pickaxeSlot;
+
                         if (this.mc.world.getBlockState(this.breakingBlock).getBlock() != Blocks.AIR && this.mc.player.getPositionVector().distanceTo((new Vec3d(this.breakingBlock)).add(0.5D, 0.5D, 0.5D)) <= 4.5D)
                         {
                             this.mc.playerController.onPlayerDamageBlock(this.breakingBlock, EnumFacing.UP);
                             this.mc.player.swingArm(EnumHand.MAIN_HAND);
+
                             return;
                         }
 
@@ -108,7 +109,6 @@ public class DispenserAura extends Module
                     this.mc.player.swingArm(EnumHand.MAIN_HAND);
                     this.breakingBlock = dispenser.getPos();
                 }
-
             }
         }
     }

@@ -19,13 +19,16 @@ public class Welcomer extends Module
     public Welcomer()
     {
         super("Welcomer", 0, Category.RENDER, "Welcomes you", settings);
+
         this.getWindows().add(new TextWindow(50, 12, "Welcomer"));
     }
 
     public void onOverlay()
     {
         boolean shadow = this.getSettings().get(3).toToggle().state;
+
         int color = (new Color((int) this.getSettings().get(0).toSlider().getValue(), (int) this.getSettings().get(1).toSlider().getValue(), (int) this.getSettings().get(2).toSlider().getValue())).getRGB();
+
         this.getWindows().get(0).clearText();
         this.getWindows().get(0).addText(new AdvancedText("Hello " + this.mc.player.getName() + " :^)", shadow, color));
     }

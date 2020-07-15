@@ -27,9 +27,11 @@ public class AutoTotem extends Module
         if (!this.getSettings().get(2).toToggle().state || (double) (System.currentTimeMillis() - this.time) >= this.getSettings().get(3).toSlider().getValue() * 1000.0D)
         {
             this.time = System.currentTimeMillis();
+
             if (this.mc.currentScreen == null || !(this.mc.currentScreen instanceof GuiHopper))
             {
                 int i;
+
                 if (this.getSettings().get(0).toToggle().state && this.mc.player.getHeldItemOffhand().getItem() == Items.AIR)
                 {
                     for (i = 9; i <= 44; ++i)
@@ -54,11 +56,11 @@ public class AutoTotem extends Module
                         if (this.mc.player.inventory.getStackInSlot(i).getItem() == Items.TOTEM_OF_UNDYING)
                         {
                             this.mc.playerController.windowClick(this.mc.player.inventoryContainer.windowId, i, 0, ClickType.SWAP, this.mc.player);
+
                             break;
                         }
                     }
                 }
-
             }
         }
     }

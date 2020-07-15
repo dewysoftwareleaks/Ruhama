@@ -12,7 +12,6 @@ import net.minecraft.util.math.MathHelper;
 
 import java.awt.*;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 public class Gui extends Module
@@ -23,15 +22,18 @@ public class Gui extends Module
     public Gui()
     {
         super("Gui", 0, Category.RENDER, "The Ingame ruhama gui", settings);
+
         this.getWindows().add(new TextWindow(2, 150, "Arraylist"));
     }
 
     public void onOverlay()
     {
         this.getWindows().get(0).clearText();
+
         int color = (new Color((int) this.getSettings().get(0).toSlider().getValue(), (int) this.getSettings().get(1).toSlider().getValue(), (int) this.getSettings().get(2).toSlider().getValue())).getRGB();
-        String s = "Ruhama Client 0.8";
+        String s = "Ruhama Client 0.8 (Leaked)";
         this.getWindows().get(0).addText(new AdvancedText(s, true, color));
+
         if (this.getSettings().get(3).toToggle().state)
         {
             int age = (int) (System.currentTimeMillis() / 20L % 510L);
@@ -42,21 +44,17 @@ public class Gui extends Module
         }
 
         List<Module> arrayList = ModuleManager.getModules();
-        arrayList.remove(this);
-        arrayList.sort((a, b) ->
-        {
-            return Integer.compare(this.mc.fontRenderer.getStringWidth(b.getName()), this.mc.fontRenderer.getStringWidth(a.getName()));
-        });
-        Iterator var4 = arrayList.iterator();
 
-        while (var4.hasNext())
+        arrayList.remove(this);
+
+        arrayList.sort((a, b) -> Integer.compare(this.mc.fontRenderer.getStringWidth(b.getName()), this.mc.fontRenderer.getStringWidth(a.getName())));
+
+        for (Module m : arrayList)
         {
-            Module m = (Module) var4.next();
             if (m.isToggled())
             {
                 this.getWindows().get(0).addText(new AdvancedText(m.getName(), true, color));
             }
         }
-
     }
 }

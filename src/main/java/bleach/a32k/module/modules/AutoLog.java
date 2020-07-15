@@ -37,9 +37,11 @@ public class AutoLog extends Module
                 if (this.getSettings().get(2).toToggle().state)
                 {
                     int t = this.getTotems();
+
                     if (t <= (int) this.getSettings().get(3).toSlider().getValue())
                     {
                         this.logOut("Logged Out With " + t + " Totems Left");
+
                         return;
                     }
                 }

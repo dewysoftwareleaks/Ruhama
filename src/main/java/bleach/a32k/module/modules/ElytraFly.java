@@ -28,11 +28,11 @@ public class ElytraFly extends Module
     {
         this.mc.player.capabilities.isFlying = false;
         this.mc.player.capabilities.setFlySpeed(0.05F);
+
         if (!this.mc.player.capabilities.isCreativeMode)
         {
             this.mc.player.capabilities.allowFlying = false;
         }
-
     }
 
     public void onUpdate()
@@ -56,6 +56,7 @@ public class ElytraFly extends Module
             {
                 this.mc.player.capabilities.setFlySpeed(0.915F);
                 this.mc.player.capabilities.isFlying = true;
+
                 if (!this.mc.player.capabilities.isCreativeMode)
                 {
                     this.mc.player.capabilities.allowFlying = true;
@@ -74,17 +75,21 @@ public class ElytraFly extends Module
             }
 
             double speed;
+
+            // hmmmmmm
             for (speed = Math.abs(this.mc.player.motionX) + Math.abs(this.mc.player.motionY) + Math.abs(this.mc.player.motionZ); speed > this.getSettings().get(1).toSlider().getValue(); speed = Math.abs(this.mc.player.motionX) + Math.abs(this.mc.player.motionY) + Math.abs(this.mc.player.motionZ))
             {
-                EntityPlayerSP var10000 = this.mc.player;
-                var10000.motionX *= 0.95D;
-                var10000 = this.mc.player;
-                var10000.motionY *= 0.95D;
-                var10000 = this.mc.player;
-                var10000.motionZ *= 0.95D;
+                EntityPlayerSP player = this.mc.player;
+
+                player.motionX *= 0.95D;
+                player = this.mc.player;
+                player.motionY *= 0.95D;
+                player = this.mc.player;
+                player.motionZ *= 0.95D;
             }
 
             Vec3d vec3d = (new Vec3d(0.0D, 0.0D, 0.23D)).rotatePitch(-((float) Math.toRadians(this.mc.player.rotationPitch))).rotateYaw(-((float) Math.toRadians(this.mc.player.rotationYaw)));
+
             if (this.getSettings().get(2).toToggle().state && MathHelper.clamp(speed / 2.0D, 0.0D, this.getSettings().get(1).toSlider().getValue() - 0.25D) < 0.23D)
             {
                 vec3d = vec3d.scale(0.2D);
@@ -92,6 +97,5 @@ public class ElytraFly extends Module
 
             this.mc.player.addVelocity(vec3d.x, vec3d.y, vec3d.z);
         }
-
     }
 }

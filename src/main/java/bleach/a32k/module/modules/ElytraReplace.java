@@ -6,8 +6,6 @@ import net.minecraft.inventory.ClickType;
 import net.minecraft.item.ItemElytra;
 import net.minecraft.item.ItemStack;
 
-import java.util.List;
-
 public class ElytraReplace extends Module
 {
     public ElytraReplace()
@@ -24,6 +22,7 @@ public class ElytraReplace extends Module
             for (byte n = 9; i <= 44; i = ++n)
             {
                 ItemStack stack;
+
                 if ((stack = this.mc.player.inventoryContainer.getSlot(n).getStack()) != ItemStack.EMPTY && stack.getItem() instanceof ItemElytra && stack.getCount() == 1 && stack.getMaxDamage() - stack.getItemDamage() > 5)
                 {
                     this.mc.playerController.windowClick(this.mc.player.inventoryContainer.windowId, 6, 0, ClickType.PICKUP, this.mc.player);
@@ -32,6 +31,5 @@ public class ElytraReplace extends Module
                 }
             }
         }
-
     }
 }

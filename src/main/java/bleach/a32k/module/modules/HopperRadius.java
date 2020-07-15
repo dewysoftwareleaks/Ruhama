@@ -30,28 +30,30 @@ public class HopperRadius extends Module
         double red = this.getSettings().get(0).toSlider().getValue() / 255.0D;
         double green = this.getSettings().get(1).toSlider().getValue() / 255.0D;
         double blue = this.getSettings().get(2).toSlider().getValue() / 255.0D;
-        Iterator var7 = this.mc.world.loadedTileEntityList.iterator();
+        Iterator<TileEntity> teIter = this.mc.world.loadedTileEntityList.iterator();
 
         while (true)
         {
             Vec3d pos;
             int i;
+
             do
             {
                 TileEntity t;
                 do
                 {
-                    if (!var7.hasNext())
+                    if (!teIter.hasNext())
                     {
                         GL11.glColor4d(1.0D, 1.0D, 1.0D, 1.0D);
                         RenderUtils.glCleanup();
                         return;
                     }
 
-                    t = (TileEntity) var7.next();
+                    t = teIter.next();
                 } while (!(t instanceof TileEntityHopper));
 
                 pos = new Vec3d((double) t.getPos().getX() + 0.5D - RenderUtils.rPos()[0], (double) t.getPos().getY() - RenderUtils.rPos()[1], (double) t.getPos().getZ() + 0.5D - RenderUtils.rPos()[2]);
+                
                 if (this.getSettings().get(3).toToggle().state)
                 {
                     GL11.glBegin(9);

@@ -5,12 +5,12 @@ import bleach.a32k.module.Module;
 import bleach.a32k.settings.SettingBase;
 import bleach.a32k.settings.SettingMode;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class AntiChunkBan extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", "AntiKick", "1 chunk"));
+    private static final List<SettingBase> settings = Collections.singletonList(new SettingMode("Mode: ", "AntiKick", "1 chunk"));
     private int dis = 0;
 
     public AntiChunkBan()
@@ -34,6 +34,5 @@ public class AntiChunkBan extends Module
         {
             this.mc.gameSettings.renderDistanceChunks = 1;
         }
-
     }
 }

@@ -25,8 +25,10 @@ import java.util.Map.Entry;
 public class AutoWither extends Module
 {
     private static final List<SettingBase> settings = Arrays.asList(new SettingToggle(false, "Rename"), new SettingToggle(true, "2b Bypass"));
+
     private int tick = 0;
     private BlockPos pos;
+
     private int rotation;
     private boolean nameTagTime;
 
@@ -39,6 +41,7 @@ public class AutoWither extends Module
     {
         this.tick = 0;
         this.nameTagTime = false;
+
         BlockPos player = this.mc.player.getPosition();
 
         for (int x = -2; x <= 2; ++x)
@@ -50,10 +53,12 @@ public class AutoWither extends Module
                     for (int r = 0; r <= 1; ++r)
                     {
                         BlockPos newPos = player.add(x, y, z);
+
                         if (!this.witherBoxIntersects(newPos, r) && this.isAreaEmpty(newPos, r) && WorldUtils.canPlaceBlock(newPos))
                         {
                             this.pos = newPos;
                             this.rotation = r;
+
                             return;
                         }
                     }
@@ -72,6 +77,7 @@ public class AutoWither extends Module
         }
 
         ++this.tick;
+
         int sand = -1;
         int skull = -1;
         int tag = -1;
@@ -92,28 +98,32 @@ public class AutoWither extends Module
 
         if (this.nameTagTime && tag != -1)
         {
-            Iterator var9 = this.mc.world.loadedEntityList.iterator();
+            Iterator<Entity> entitiesItre = this.mc.world.loadedEntityList.iterator();
 
             Entity e;
+
             do
             {
-                if (!var9.hasNext())
+                if (!entitiesItre.hasNext())
                 {
                     return;
                 }
 
-                e = (Entity) var9.next();
+                e = entitiesItre.next();
             } while (!(e instanceof EntityWither) || e.getName().equals(this.mc.player.inventory.getStackInSlot(tag).getDisplayName()) || (double) this.mc.player.getDistance(e) > 5.5D);
 
             this.mc.player.inventory.currentItem = tag;
             this.mc.playerController.interactWithEntity(this.mc.player, e, EnumHand.MAIN_HAND);
+
             this.setToggled(false);
         } else if (skull != -1 && sand != -1)
         {
-            LinkedHashMap<BlockPos, Integer> blocks = new LinkedHashMap();
+            LinkedHashMap<BlockPos, Integer> blocks = new LinkedHashMap<>();
+
             blocks.put(this.pos, sand);
             blocks.put(this.pos.add(0, 1, 0), sand);
             blocks.put(this.pos.add(0, 2, 0), skull);
+
             if (this.rotation == 0)
             {
                 blocks.put(this.pos.add(-1, 1, 0), sand);
@@ -129,17 +139,15 @@ public class AutoWither extends Module
             }
 
             int cap = 0;
-            Iterator var6 = blocks.entrySet().iterator();
 
-            while (var6.hasNext())
+            for (Entry<BlockPos, Integer> blockPosIntegerEntry : blocks.entrySet())
             {
-                Entry<BlockPos, Integer> e = (Entry) var6.next();
                 if (cap >= 2)
                 {
                     return;
                 }
 
-                if (WorldUtils.placeBlock(e.getKey(), e.getValue(), this.getSettings().get(1).toToggle().state, e.equals(blocks.entrySet().toArray()[blocks.size() - 1]) && this.getSettings().get(1).toToggle().state))
+                if (WorldUtils.placeBlock(blockPosIntegerEntry.getKey(), blockPosIntegerEntry.getValue(), this.getSettings().get(1).toToggle().state, blockPosIntegerEntry.equals(blocks.entrySet().toArray()[blocks.size() - 1]) && this.getSettings().get(1).toToggle().state))
                 {
                     ++cap;
                 }
@@ -152,7 +160,6 @@ public class AutoWither extends Module
             {
                 this.setToggled(false);
             }
-
         } else
         {
             this.setToggled(false);
@@ -184,17 +191,18 @@ public class AutoWither extends Module
     {
         Vec3d vec = new Vec3d(p);
         AxisAlignedBB box = rot == 0 ? new AxisAlignedBB(vec.add(-1.0D, 0.0D, 0.0D), vec.add(2.0D, 3.0D, 1.0D)) : new AxisAlignedBB(vec.add(0.0D, 0.0D, -1.0D), vec.add(1.0D, 3.0D, 2.0D));
-        Iterator var5 = this.mc.world.loadedEntityList.iterator();
+        Iterator<Entity> entityIterator = this.mc.world.loadedEntityList.iterator();
 
         Entity e;
+
         do
         {
-            if (!var5.hasNext())
+            if (!entityIterator.hasNext())
             {
                 return false;
             }
 
-            e = (Entity) var5.next();
+            e = entityIterator.next();
         } while (!(e instanceof EntityLivingBase) || !box.intersects(e.getEntityBoundingBox()));
 
         return true;

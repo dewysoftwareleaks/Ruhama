@@ -12,17 +12,17 @@ import net.minecraft.util.text.TextFormatting;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 
 public class PlayerRadar extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingToggle(false, "Round"));
+    private static final List<SettingBase> settings = Collections.singletonList(new SettingToggle(false, "Round"));
 
     public PlayerRadar()
     {
         super("PlayerRadar", 0, Category.RENDER, "Shows nearby people", settings);
+
         this.getWindows().add(new TextWindow(100, 150, "PlayerRadar"));
     }
 
@@ -30,11 +30,9 @@ public class PlayerRadar extends Module
     {
         int c = Gui.arrayListEnd + 10;
         this.getWindows().get(0).clearText();
-        Iterator var2 = this.mc.world.playerEntities.iterator();
 
-        while (var2.hasNext())
+        for (EntityPlayer e : this.mc.world.playerEntities)
         {
-            EntityPlayer e = (EntityPlayer) var2.next();
             if (e != this.mc.player)
             {
                 int color = 0;
@@ -42,14 +40,16 @@ public class PlayerRadar extends Module
                 try
                 {
                     color = e.getHealth() + e.getAbsorptionAmount() > 20.0F ? 2158832 : MathHelper.hsvToRGB((e.getHealth() + e.getAbsorptionAmount()) / 20.0F / 3.0F, 1.0F, 1.0F);
-                } catch (Exception var11)
+                } catch (Exception ignored)
                 {
                 }
 
-                double health = (new BigDecimal(e.getHealth() + e.getAbsorptionAmount())).setScale(1, RoundingMode.HALF_UP).doubleValue();
-                double dist = (new BigDecimal(e.getDistance(this.mc.player))).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                double health = (BigDecimal.valueOf(e.getHealth() + e.getAbsorptionAmount())).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                double dist = (BigDecimal.valueOf(e.getDistance(this.mc.player))).setScale(1, RoundingMode.HALF_UP).doubleValue();
+
                 boolean round = this.getSettings().get(0).toToggle().state;
                 boolean dead = e.getHealth() <= 0.0F;
+
                 if (round)
                 {
                     if (dead)

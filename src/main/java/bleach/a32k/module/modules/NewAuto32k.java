@@ -10,7 +10,6 @@ import bleach.a32k.utils.RuhamaLogger;
 import bleach.a32k.utils.WorldUtils;
 import net.minecraft.block.BlockShulkerBox;
 import net.minecraft.client.gui.GuiHopper;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiDispenser;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -18,7 +17,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.ClickType;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAir;
 import net.minecraft.item.ItemBlock;
@@ -27,25 +25,25 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class NewAuto32k extends Module
 {
     private static final List<SettingBase> settings = Arrays.asList(new SettingToggle(true, "2b Bypass"), new SettingToggle(true, "Killaura"), new SettingSlider(0.0D, 20.0D, 20.0D, 0, "CPS: "), new SettingMode("CPS: ", "Clicks/Sec", "Clicks/Tick", "Tick Delay"), new SettingToggle(false, "Timeout"), new SettingMode("Place: ", "Auto", "Looking"));
+
     private BlockPos pos;
     private int hopper;
-    private int dispenser;
     private int redstone;
     private int shulker;
-    private int block;
+
     private int[] rot;
+
     private boolean active;
     private boolean openedDispenser;
+
     private int dispenserTicks;
     private int ticksPassed;
+
     private int timer = 0;
 
     public NewAuto32k()
@@ -57,25 +55,27 @@ public class NewAuto32k extends Module
     {
         this.ticksPassed = 0;
         this.hopper = -1;
-        this.dispenser = -1;
+        int dispenser = -1;
         this.redstone = -1;
         this.shulker = -1;
-        this.block = -1;
+        int block = -1;
         this.active = false;
         this.openedDispenser = false;
         this.dispenserTicks = 0;
         this.timer = 0;
 
         int x;
+
         for (x = 0; x <= 8; ++x)
         {
             Item item = this.mc.player.inventory.getStackInSlot(x).getItem();
+
             if (item == Item.getItemFromBlock(Blocks.HOPPER))
             {
                 this.hopper = x;
             } else if (item == Item.getItemFromBlock(Blocks.DISPENSER))
             {
-                this.dispenser = x;
+                dispenser = x;
             } else if (item == Item.getItemFromBlock(Blocks.REDSTONE_BLOCK))
             {
                 this.redstone = x;
@@ -84,14 +84,14 @@ public class NewAuto32k extends Module
                 this.shulker = x;
             } else if (item instanceof ItemBlock)
             {
-                this.block = x;
+                block = x;
             }
         }
 
         if (this.hopper == -1)
         {
             RuhamaLogger.log("Missing Hopper");
-        } else if (this.dispenser == -1)
+        } else if (dispenser == -1)
         {
             RuhamaLogger.log("Missing Dispenser");
         } else if (this.redstone == -1)
@@ -100,29 +100,35 @@ public class NewAuto32k extends Module
         } else if (this.shulker == -1)
         {
             RuhamaLogger.log("Missing Shulker");
-        } else if (this.block == -1)
+        } else if (block == -1)
         {
             RuhamaLogger.log("Missing Generic Block");
         }
 
-        if (this.hopper != -1 && this.dispenser != -1 && this.redstone != -1 && this.shulker != -1 && this.block != -1)
+        if (this.hopper != -1 && dispenser != -1 && this.redstone != -1 && this.shulker != -1 && block != -1)
         {
             if (this.getSettings().get(5).toMode().mode == 1)
             {
                 RayTraceResult ray = this.mc.player.rayTrace(5.0D, this.mc.getRenderPartialTicks());
-                this.pos = ray.getBlockPos().up();
+
+                this.pos = Objects.requireNonNull(ray).getBlockPos().up();
+
                 double xPos = (double) this.pos.getX() - this.mc.player.posX;
                 double zPos = (double) this.pos.getZ() - this.mc.player.posZ;
+
                 this.rot = Math.abs(xPos) > Math.abs(zPos) ? (xPos > 0.0D ? new int[] {-1, 0} : new int[] {1, 0}) : (zPos > 0.0D ? new int[] {0, -1} : new int[] {0, 1});
+
                 if (WorldUtils.canPlaceBlock(this.pos) && WorldUtils.isBlockEmpty(this.pos) && WorldUtils.isBlockEmpty(this.pos.add(this.rot[0], 0, this.rot[1])) && WorldUtils.isBlockEmpty(this.pos.add(0, 1, 0)) && WorldUtils.isBlockEmpty(this.pos.add(0, 2, 0)) && WorldUtils.isBlockEmpty(this.pos.add(this.rot[0], 1, this.rot[1])))
                 {
                     boolean rotate = this.getSettings().get(0).toToggle().state;
-                    WorldUtils.placeBlock(this.pos, this.block, rotate, false);
+
+                    WorldUtils.placeBlock(this.pos, block, rotate, false);
                     WorldUtils.rotatePacket((double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getX() + 0.5D, this.pos.getY() + 1, (double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getZ() + 0.5D);
-                    WorldUtils.placeBlock(this.pos.add(0, 1, 0), this.dispenser, false, false);
+                    WorldUtils.placeBlock(this.pos.add(0, 1, 0), dispenser, false, false);
                 } else
                 {
                     RuhamaLogger.log("Unable to place 32k");
+
                     this.setToggled(false);
                 }
             } else
@@ -135,12 +141,15 @@ public class NewAuto32k extends Module
                         {
                             this.rot = Math.abs(x) > Math.abs(z) ? (x > 0 ? new int[] {-1, 0} : new int[] {1, 0}) : (z > 0 ? new int[] {0, -1} : new int[] {0, 1});
                             this.pos = this.mc.player.getPosition().add(x, y, z);
+
                             if (this.mc.player.getPositionEyes(this.mc.getRenderPartialTicks()).distanceTo(this.mc.player.getPositionVector().add(x - this.rot[0] / 2, (double) y + 0.5D, z + this.rot[1] / 2)) <= 4.5D && this.mc.player.getPositionEyes(this.mc.getRenderPartialTicks()).distanceTo(this.mc.player.getPositionVector().add((double) x + 0.5D, (double) y + 2.5D, (double) z + 0.5D)) <= 4.5D && WorldUtils.canPlaceBlock(this.pos) && WorldUtils.isBlockEmpty(this.pos) && WorldUtils.isBlockEmpty(this.pos.add(this.rot[0], 0, this.rot[1])) && WorldUtils.isBlockEmpty(this.pos.add(0, 1, 0)) && WorldUtils.isBlockEmpty(this.pos.add(0, 2, 0)) && WorldUtils.isBlockEmpty(this.pos.add(this.rot[0], 1, this.rot[1])))
                             {
                                 boolean rotate = this.getSettings().get(0).toToggle().state;
-                                WorldUtils.placeBlock(this.pos, this.block, rotate, false);
+
+                                WorldUtils.placeBlock(this.pos, block, rotate, false);
                                 WorldUtils.rotatePacket((double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getX() + 0.5D, this.pos.getY() + 1, (double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getZ() + 0.5D);
-                                WorldUtils.placeBlock(this.pos.add(0, 1, 0), this.dispenser, false, false);
+                                WorldUtils.placeBlock(this.pos.add(0, 1, 0), dispenser, false, false);
+
                                 return;
                             }
                         }
@@ -185,18 +194,16 @@ public class NewAuto32k extends Module
                 }
 
                 this.active = true;
-                if (this.active)
+
+                if (this.getSettings().get(3).toMode().mode == 0)
                 {
-                    if (this.getSettings().get(3).toMode().mode == 0)
-                    {
-                        this.timer = (long) this.timer >= Math.round(20.0D / this.getSettings().get(2).toSlider().getValue()) ? 0 : this.timer + 1;
-                    } else if (this.getSettings().get(3).toMode().mode == 1)
-                    {
-                        this.timer = 0;
-                    } else if (this.getSettings().get(3).toMode().mode == 2)
-                    {
-                        this.timer = (double) this.timer >= this.getSettings().get(2).toSlider().getValue() ? 0 : this.timer + 1;
-                    }
+                    this.timer = (long) this.timer >= Math.round(20.0D / this.getSettings().get(2).toSlider().getValue()) ? 0 : this.timer + 1;
+                } else if (this.getSettings().get(3).toMode().mode == 1)
+                {
+                    this.timer = 0;
+                } else if (this.getSettings().get(3).toMode().mode == 2)
+                {
+                    this.timer = (double) this.timer >= this.getSettings().get(2).toSlider().getValue() ? 0 : this.timer + 1;
                 }
 
                 if (!(gui.inventorySlots.inventorySlots.get(0).getStack().getItem() instanceof ItemAir) && this.active)
@@ -264,12 +271,12 @@ public class NewAuto32k extends Module
 
             try
             {
-                List<Entity> players = new ArrayList(this.mc.world.loadedEntityList);
-                Iterator var4 = (new ArrayList(players)).iterator();
+                List<Entity> players = new ArrayList<>(this.mc.world.loadedEntityList);
 
-                while (var4.hasNext())
+                for (Object o : new ArrayList<>(players))
                 {
-                    Entity e = (Entity) var4.next();
+                    Entity e = (Entity) o;
+
                     if (!(e instanceof EntityLivingBase))
                     {
                         players.remove(e);
@@ -277,15 +284,13 @@ public class NewAuto32k extends Module
                 }
 
                 players.remove(this.mc.player);
-                players.sort((a, b) ->
-                {
-                    return Float.compare(a.getDistance(this.mc.player), b.getDistance(this.mc.player));
-                });
+                players.sort((a, b) -> Float.compare(a.getDistance(this.mc.player), b.getDistance(this.mc.player)));
+
                 if (players.get(0).getDistance(this.mc.player) < 8.0F)
                 {
                     target = players.get(0);
                 }
-            } catch (Exception var6)
+            } catch (Exception ignored)
             {
             }
 
@@ -295,6 +300,7 @@ public class NewAuto32k extends Module
             }
 
             WorldUtils.rotateClient(target.posX, target.posY + 1.0D, target.posZ);
+
             if (target.getDistance(this.mc.player) > 6.0F)
             {
                 return;

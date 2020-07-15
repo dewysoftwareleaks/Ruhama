@@ -41,26 +41,30 @@ public class HoleFiller extends Module
 
         if (v7 != -1)
         {
-            Iterator var11 = this.mc.world.playerEntities.iterator();
+            Iterator<EntityPlayer> playersIter = this.mc.world.playerEntities.iterator();
 
-            label77:
+            ferngayler:
+
             while (true)
             {
                 EntityPlayer v;
+
                 do
                 {
-                    if (!var11.hasNext())
+                    if (!playersIter.hasNext())
                     {
                         return;
                     }
 
-                    v = (EntityPlayer) var11.next();
+                    v = playersIter.next();
                 } while (v.getUniqueID().equals(this.mc.player.getUniqueID()));
 
                 int v2 = (int) this.getSettings().get(0).toSlider().getValue();
+
                 BlockPos v3 = v.getPosition();
+
                 Iterable<BlockPos> v4 = BlockPos.getAllInBox(v3.add(-v2, -v2, -v2), v3.add(v2, v2, v2));
-                Iterator var7 = v4.iterator();
+                Iterator<BlockPos> blockIter = v4.iterator();
 
                 while (true)
                 {
@@ -71,21 +75,23 @@ public class HoleFiller extends Module
                         {
                             do
                             {
-                                if (!var7.hasNext())
+                                if (!blockIter.hasNext())
                                 {
-                                    continue label77;
+                                    continue ferngayler;
                                 }
 
-                                v5 = (BlockPos) var7.next();
+                                v5 = (BlockPos) blockIter.next();
                             } while (this.mc.player.getDistanceSqToCenter(v5) > this.getSettings().get(1).toSlider().getValue());
                         } while (!this.mc.world.getBlockState(v5).getMaterial().isReplaceable());
                     } while (!this.mc.world.getBlockState(v5.add(0, 1, 0)).getMaterial().isReplaceable());
 
-                    boolean v6 = this.mc.world.getBlockState(v5.add(0, -1, 0)).getMaterial().isSolid() && this.mc.world.getBlockState(v5.add(1, 0, 0)).getMaterial().isSolid() && this.mc.world.getBlockState(v5.add(0, 0, 1)).getMaterial().isSolid() && this.mc.world.getBlockState(v5.add(-1, 0, 0)).getMaterial().isSolid() && this.mc.world.getBlockState(v5.add(0, 0, -1)).getMaterial().isSolid() && this.mc.world.getBlockState(v5.add(0, 0, 0)).getMaterial() == Material.AIR && this.mc.world.getBlockState(v5.add(0, 1, 0)).getMaterial() == Material.AIR && this.mc.world.getBlockState(v5.add(0, 2, 0)).getMaterial() == Material.AIR;
-                    if (v6 && this.mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(v5)).isEmpty())
+                    boolean v9 = this.mc.world.getBlockState(v5.add(0, -1, 0)).getMaterial().isSolid() && this.mc.world.getBlockState(v5.add(1, 0, 0)).getMaterial().isSolid() && this.mc.world.getBlockState(v5.add(0, 0, 1)).getMaterial().isSolid() && this.mc.world.getBlockState(v5.add(-1, 0, 0)).getMaterial().isSolid() && this.mc.world.getBlockState(v5.add(0, 0, -1)).getMaterial().isSolid() && this.mc.world.getBlockState(v5.add(0, 0, 0)).getMaterial() == Material.AIR && this.mc.world.getBlockState(v5.add(0, 1, 0)).getMaterial() == Material.AIR && this.mc.world.getBlockState(v5.add(0, 2, 0)).getMaterial() == Material.AIR;
+
+                    if (v9 && this.mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(v5)).isEmpty())
                     {
                         int v8 = this.mc.player.inventory.currentItem;
                         this.mc.player.inventory.currentItem = v7;
+
                         WorldUtils.placeBlock(v5, v7, this.getSettings().get(2).toToggle().state, this.getSettings().get(2).toToggle().state);
                         this.mc.player.inventory.currentItem = v8;
                     }

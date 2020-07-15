@@ -18,8 +18,8 @@ import java.util.Map.Entry;
 public class PearlViewer extends Module
 {
     private static final List<SettingBase> settings = Arrays.asList(new SettingToggle(true, "Chat"), new SettingToggle(true, "Render"), new SettingSlider(0.0D, 20.0D, 5.0D, 1, "Render Time: "), new SettingSlider(0.0D, 10.0D, 3.5D, 2, "Thick: "));
-    private final HashMap<UUID, List<Vec3d>> poses = new HashMap();
-    private final HashMap<UUID, Double> time = new HashMap();
+    private final HashMap<UUID, List<Vec3d>> poses = new HashMap<>();
+    private final HashMap<UUID, Double> time = new HashMap<>();
 
     public PearlViewer()
     {
@@ -28,11 +28,12 @@ public class PearlViewer extends Module
 
     public void onUpdate()
     {
-        Iterator var1 = (new HashMap(this.time)).entrySet().iterator();
+        Iterator iter = (new HashMap(this.time)).entrySet().iterator();
 
-        while (var1.hasNext())
+        while (iter.hasNext())
         {
-            Entry<UUID, Double> e = (Entry) var1.next();
+            Entry<UUID, Double> e = (Entry) iter.next();
+
             if (e.getValue() <= 0.0D)
             {
                 this.poses.remove(e.getKey());
@@ -43,7 +44,7 @@ public class PearlViewer extends Module
             }
         }
 
-        var1 = this.mc.world.loadedEntityList.iterator();
+        iter = this.mc.world.loadedEntityList.iterator();
 
         while (true)
         {
@@ -52,32 +53,30 @@ public class PearlViewer extends Module
                 Entity e;
                 do
                 {
-                    if (!var1.hasNext())
+                    if (!iter.hasNext())
                     {
                         return;
                     }
 
-                    e = (Entity) var1.next();
+                    e = (Entity) iter.next();
                 } while (!(e instanceof EntityEnderPearl));
 
                 if (!this.poses.containsKey(e.getUniqueID()))
                 {
                     if (this.getSettings().get(0).toToggle().state)
                     {
-                        Iterator var6 = this.mc.world.playerEntities.iterator();
-
-                        while (var6.hasNext())
+                        for (net.minecraft.entity.player.EntityPlayer entityPlayer : this.mc.world.playerEntities)
                         {
-                            Entity e1 = (Entity) var6.next();
-                            if (e1.getDistance(e) < 4.0F && e1.getName() != this.mc.player.getName())
+                            if (entityPlayer.getDistance(e) < 4.0F && ((Entity) entityPlayer).getName() != this.mc.player.getName())
                             {
-                                RuhamaLogger.log(e1.getName() + " Threw a pearl");
+                                RuhamaLogger.log(((Entity) entityPlayer).getName() + " Threw a pearl");
+
                                 break;
                             }
                         }
                     }
 
-                    this.poses.put(e.getUniqueID(), new ArrayList(Arrays.asList(e.getPositionVector())));
+                    this.poses.put(e.getUniqueID(), new ArrayList<>(Collections.singletonList(e.getPositionVector())));
                     this.time.put(e.getUniqueID(), this.getSettings().get(2).toSlider().getValue());
                 } else
                 {
@@ -95,20 +94,20 @@ public class PearlViewer extends Module
         {
             RenderUtils.glSetup();
             GL11.glLineWidth((float) this.getSettings().get(3).toSlider().getValue());
-            Iterator var1 = this.poses.entrySet().iterator();
+            Iterator posIter = this.poses.entrySet().iterator();
 
             while (true)
             {
                 Entry e;
                 do
                 {
-                    if (!var1.hasNext())
+                    if (!posIter.hasNext())
                     {
                         RenderUtils.glCleanup();
                         return;
                     }
 
-                    e = (Entry) var1.next();
+                    e = (Entry) posIter.next();
                 } while (((List) e.getValue()).size() <= 2);
 
                 GL11.glBegin(1);

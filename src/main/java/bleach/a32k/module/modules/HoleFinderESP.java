@@ -15,15 +15,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class HoleFinderESP extends Module
 {
     private static final List<SettingBase> settings = Arrays.asList(new SettingSlider(5.0D, 25.0D, 10.0D, 0, "Range: "), new SettingMode("Draw: ", "Full", "Flat"), new SettingToggle(true, "Rainbow"), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Obby-R: "), new SettingSlider(0.0D, 255.0D, 255.0D, 0, "Obby-G: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Obby-B: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Bedrk-R: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Bedrk-G: "), new SettingSlider(0.0D, 255.0D, 255.0D, 0, "Bedrk-B: "));
-    private final List<BlockPos> poses = new ArrayList();
+    private final List<BlockPos> poses = new ArrayList<>();
     public Vec3d prevPos;
     private double[] rPos;
 
@@ -39,7 +36,6 @@ public class HoleFinderESP extends Module
         {
             this.update((int) this.getSettings().get(0).toSlider().getValue());
         }
-
     }
 
     public void update(int range)
@@ -62,15 +58,14 @@ public class HoleFinderESP extends Module
                 }
             }
         }
-
     }
 
     public void onRender()
     {
         try
         {
-            this.rPos = new double[] {(Double) ReflectUtils.getField(RenderManager.class, "renderPosX", "renderPosX").get(this.mc.getRenderManager()), (Double) ReflectUtils.getField(RenderManager.class, "renderPosY", "renderPosY").get(this.mc.getRenderManager()), (Double) ReflectUtils.getField(RenderManager.class, "renderPosZ", "renderPosZ").get(this.mc.getRenderManager())};
-        } catch (Exception var5)
+            this.rPos = new double[] {(Double) Objects.requireNonNull(ReflectUtils.getField(RenderManager.class, "renderPosX", "renderPosX")).get(this.mc.getRenderManager()), (Double) Objects.requireNonNull(ReflectUtils.getField(RenderManager.class, "renderPosY", "renderPosY")).get(this.mc.getRenderManager()), (Double) Objects.requireNonNull(ReflectUtils.getField(RenderManager.class, "renderPosZ", "renderPosZ")).get(this.mc.getRenderManager())};
+        } catch (Exception e)
         {
             this.rPos = new double[] {0.0D, 0.0D, 0.0D};
         }
@@ -82,8 +77,10 @@ public class HoleFinderESP extends Module
         GL11.glDisable(2929);
         GL11.glDepthMask(false);
         GL11.glLineWidth(2.0F);
+
         float blue = (float) (System.currentTimeMillis() / 10L % 512L) / 255.0F;
         float red = (float) (System.currentTimeMillis() / 16L % 512L) / 255.0F;
+
         if (blue > 1.0F)
         {
             blue = 1.0F - blue;
@@ -94,11 +91,8 @@ public class HoleFinderESP extends Module
             red = 1.0F - red;
         }
 
-        Iterator var3 = this.poses.iterator();
-
-        while (var3.hasNext())
+        for (BlockPos p : this.poses)
         {
-            BlockPos p = (BlockPos) var3.next();
             this.drawFilledBlockBox(p, red, 0.7F, blue, 0.25F);
         }
 
@@ -116,12 +110,14 @@ public class HoleFinderESP extends Module
             double x = (double) blockPos.getX() - this.rPos[0];
             double y = (double) blockPos.getY() - this.rPos[1];
             double z = (double) blockPos.getZ() - this.rPos[2];
+
             float or = (float) (this.getSettings().get(3).toSlider().getValue() / 255.0D);
             float og = (float) (this.getSettings().get(4).toSlider().getValue() / 255.0D);
             float ob = (float) (this.getSettings().get(5).toSlider().getValue() / 255.0D);
             float br = (float) (this.getSettings().get(6).toSlider().getValue() / 255.0D);
             float bg = (float) (this.getSettings().get(7).toSlider().getValue() / 255.0D);
             float bb = (float) (this.getSettings().get(8).toSlider().getValue() / 255.0D);
+
             if (this.getSettings().get(2).toToggle().state)
             {
                 RenderGlobal.renderFilledBox(new AxisAlignedBB(x, y, z, x + 1.0D, y, z + 1.0D), r, g, b, a);
@@ -193,9 +189,8 @@ public class HoleFinderESP extends Module
                     RenderGlobal.drawSelectionBoundingBox(new AxisAlignedBB(x, y, z + 1.0D, x + 1.0D, y + 1.0D, z + 1.0D), br, bg, bb, a * 1.5F);
                 }
             }
-        } catch (Exception var18)
+        } catch (Exception ignored)
         {
         }
-
     }
 }

@@ -154,7 +154,7 @@ public class Ruhama
     @SubscribeEvent
     public void suckcuck(ClientChatEvent event)
     {
-        if (ModuleManager.getModuleByName("RuhamaOntop").isToggled() && !event.getMessage().contains("ʀᴜʜᴀᴍᴀ") && !event.getMessage().startsWith("/"))
+        if (ModuleManager.getModuleByName("RuhamaBad").isToggled() && !event.getMessage().contains("ʀᴜʜᴀᴍᴀ") && !event.getMessage().startsWith("/"))
         {
             event.setCanceled(true);
             mc.ingameGUI.getChatGUI().addToSentMessages(event.getMessage());

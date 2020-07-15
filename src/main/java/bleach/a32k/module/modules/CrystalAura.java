@@ -24,11 +24,14 @@ import net.minecraft.world.Explosion;
 import java.util.*;
 import java.util.stream.Collectors;
 
+// some methods in here do bugger all
 public class CrystalAura extends Module
 {
     private static final List<SettingBase> settings = Arrays.asList(new SettingToggle(true, "AutoSwitch"), new SettingToggle(true, "Players"), new SettingToggle(false, "Mobs"), new SettingToggle(false, "Animals"), new SettingToggle(true, "Place"), new SettingToggle(false, "AlwaysPlace"), new SettingSlider(0.0D, 6.0D, 4.5D, 2, "PlaceRange: "), new SettingSlider(0.0D, 6.0D, 4.5D, 2, "HitRange: "), new SettingSlider(0.0D, 1000.0D, 50.0D, 2, "PlaceDelay: "));
+
     private BlockPos render;
     private Entity renderEnt;
+
     private long systemTime = -1L;
     private boolean togglePitch = false;
     private boolean isSpoofingAngles;
@@ -41,16 +44,8 @@ public class CrystalAura extends Module
 
     public void onUpdate()
     {
-        EntityEnderCrystal crystal = this.mc.world.loadedEntityList.stream().filter((entityx) ->
-        {
-            return entityx instanceof EntityEnderCrystal;
-        }).map((entityx) ->
-        {
-            return (EntityEnderCrystal) entityx;
-        }).min(Comparator.comparing((c) ->
-        {
-            return this.mc.player.getDistance(c);
-        })).orElse(null);
+        EntityEnderCrystal crystal = this.mc.world.loadedEntityList.stream().filter((entityx) -> entityx instanceof EntityEnderCrystal).map((entityx) -> (EntityEnderCrystal) entityx).min(Comparator.comparing((c) -> this.mc.player.getDistance(c))).orElse(null);
+
         if (crystal != null && (double) this.mc.player.getDistance(crystal) <= this.getSettings().get(7).toSlider().getValue())
         {
             if (System.nanoTime() / 1000000L - this.systemTime >= 250L)
@@ -59,11 +54,11 @@ public class CrystalAura extends Module
                 this.mc.player.swingArm(EnumHand.MAIN_HAND);
                 this.systemTime = System.nanoTime() / 1000000L;
             }
-
         } else
         {
             this.resetRotation();
             int crystalSlot = this.mc.player.getHeldItemMainhand().getItem() == Items.END_CRYSTAL ? this.mc.player.inventory.currentItem : -1;
+
             if (crystalSlot == -1)
             {
                 for (int l = 0; l < 9; ++l)
@@ -77,6 +72,7 @@ public class CrystalAura extends Module
             }
 
             boolean offhand = false;
+
             if (this.mc.player.getHeldItemOffhand().getItem() == Items.END_CRYSTAL)
             {
                 offhand = true;
@@ -86,23 +82,24 @@ public class CrystalAura extends Module
             }
 
             List<BlockPos> blocks = this.findCrystalBlocks();
-            List<Entity> entities = this.mc.world.loadedEntityList.stream().filter((e) ->
-            {
-                return e instanceof EntityPlayer && this.getSettings().get(1).toToggle().state || e.isCreatureType(EnumCreatureType.MONSTER, false) && this.getSettings().get(2).toToggle().state || this.isPassive(e) && this.getSettings().get(3).toToggle().state;
-            }).collect(Collectors.toList());
+            List<Entity> entities = this.mc.world.loadedEntityList.stream().filter((e) -> e instanceof EntityPlayer && this.getSettings().get(1).toToggle().state || e.isCreatureType(EnumCreatureType.MONSTER, false) && this.getSettings().get(2).toToggle().state || this.isPassive(e) && this.getSettings().get(3).toToggle().state).collect(Collectors.toList());
+
             BlockPos q = this.mc.player.getPosition().add(0, 2, 0);
             double damage = 0.5D;
-            Iterator var9 = entities.iterator();
 
-            label130:
+            Iterator<Entity> entitiesIter = entities.iterator();
+
+            fernflowerMoment:
+
             while (true)
             {
                 Entity entity;
+
                 do
                 {
                     do
                     {
-                        if (!var9.hasNext())
+                        if (!entitiesIter.hasNext())
                         {
                             if (damage == 0.5D)
                             {
@@ -113,9 +110,11 @@ public class CrystalAura extends Module
                             }
 
                             this.render = q;
+
                             if (this.getSettings().get(4).toToggle().state && (this.getSettings().get(0).toToggle().state || this.mc.player.inventory.getCurrentItem().getItem() == Items.END_CRYSTAL) && (double) this.placeDelay + this.getSettings().get(8).toSlider().getValue() < (double) System.currentTimeMillis())
                             {
                                 this.placeDelay = System.currentTimeMillis();
+
                                 if (!offhand && this.mc.player.inventory.currentItem != crystalSlot)
                                 {
                                     if (this.getSettings().get(0).toToggle().state)
@@ -128,8 +127,10 @@ public class CrystalAura extends Module
                                 }
 
                                 this.lookAtPacket((double) q.getX() + 0.5D, (double) q.getY() - 0.5D, (double) q.getZ() + 0.5D, this.mc.player);
+
                                 RayTraceResult result = this.mc.world.rayTraceBlocks(new Vec3d(this.mc.player.posX, this.mc.player.posY + (double) this.mc.player.getEyeHeight(), this.mc.player.posZ), new Vec3d((double) q.getX() + 0.5D, (double) q.getY() - 0.5D, (double) q.getZ() + 0.5D));
                                 EnumFacing f;
+
                                 if (result != null && result.sideHit != null)
                                 {
                                     f = result.sideHit;
@@ -143,16 +144,17 @@ public class CrystalAura extends Module
 
                             if (this.isSpoofingAngles)
                             {
-                                EntityPlayerSP var10000;
+                                EntityPlayerSP player;
+
                                 if (this.togglePitch)
                                 {
-                                    var10000 = this.mc.player;
-                                    var10000.rotationPitch = (float) ((double) var10000.rotationPitch + 4.0E-4D);
+                                    player = this.mc.player;
+                                    player.rotationPitch = (float) ((double) player.rotationPitch + 4.0E-4D);
                                     this.togglePitch = false;
                                 } else
                                 {
-                                    var10000 = this.mc.player;
-                                    var10000.rotationPitch = (float) ((double) var10000.rotationPitch - 4.0E-4D);
+                                    player = this.mc.player;
+                                    player.rotationPitch = (float) ((double) player.rotationPitch - 4.0E-4D);
                                     this.togglePitch = true;
                                 }
                             }
@@ -160,17 +162,19 @@ public class CrystalAura extends Module
                             return;
                         }
 
-                        entity = (Entity) var9.next();
+                        entity = entitiesIter.next();
                     } while (entity == this.mc.player);
                 } while (((EntityLivingBase) entity).getHealth() <= 0.0F);
 
-                Iterator var11 = blocks.iterator();
+                Iterator<BlockPos> blocksIter = blocks.iterator();
 
                 while (true)
                 {
                     BlockPos blockPos;
+
                     double d;
                     double self;
+
                     do
                     {
                         do
@@ -180,12 +184,12 @@ public class CrystalAura extends Module
                                 double b;
                                 do
                                 {
-                                    if (!var11.hasNext())
+                                    if (!blocksIter.hasNext())
                                     {
-                                        continue label130;
+                                        continue fernflowerMoment;
                                     }
 
-                                    blockPos = (BlockPos) var11.next();
+                                    blockPos = (BlockPos) blocksIter.next();
                                     b = entity.getDistanceSq(blockPos);
                                 } while (b >= 169.0D);
 
@@ -198,6 +202,7 @@ public class CrystalAura extends Module
 
                     damage = d;
                     q = blockPos;
+
                     this.renderEnt = entity;
                 }
             }
@@ -209,11 +214,7 @@ public class CrystalAura extends Module
         if (this.render != null)
         {
             RenderUtils.drawFilledBlockBox(new AxisAlignedBB(this.render), 1.0F, 1.0F, 1.0F, 0.3F);
-            if (this.renderEnt != null)
-            {
-            }
         }
-
     }
 
     private void lookAtPacket(double px, double py, double pz, EntityPlayer me)
@@ -243,7 +244,8 @@ public class CrystalAura extends Module
 
     public List<BlockPos> getSphere(BlockPos loc, float r, int h, boolean hollow, boolean sphere, int plus_y)
     {
-        List<BlockPos> circleblocks = new ArrayList();
+        List<BlockPos> circleblocks = new ArrayList<>();
+
         int cx = loc.getX();
         int cy = loc.getY();
         int cz = loc.getZ();
@@ -271,11 +273,14 @@ public class CrystalAura extends Module
     {
         float doubleExplosionSize = 12.0F;
         double distancedsize = entity.getDistance(posX, posY, posZ) / (double) doubleExplosionSize;
+
         Vec3d vec3d = new Vec3d(posX, posY, posZ);
         double blockDensity = entity.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
         double v = (1.0D - distancedsize) * blockDensity;
+
         float damage = (float) ((int) ((v * v + v) / 2.0D * 7.0D * (double) doubleExplosionSize + 1.0D));
         double finald = 1.0D;
+
         if (entity instanceof EntityLivingBase)
         {
             finald = this.getBlastReduction((EntityLivingBase) entity, this.getDamageMultiplied(damage), new Explosion(this.mc.world, null, posX, posY, posZ, 6.0F, false, true));
@@ -290,20 +295,25 @@ public class CrystalAura extends Module
         {
             EntityPlayer ep = (EntityPlayer) entity;
             DamageSource ds = DamageSource.causeExplosionDamage(explosion);
+
             damage = CombatRules.getDamageAfterAbsorb(damage, (float) ep.getTotalArmorValue(), (float) ep.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
+
             int k = EnchantmentHelper.getEnchantmentModifierDamage(ep.getArmorInventoryList(), ds);
             float f = MathHelper.clamp((float) k, 0.0F, 20.0F);
+
             damage *= 1.0F - f / 25.0F;
-            if (entity.isPotionActive(Potion.getPotionById(11)))
+            if (entity.isPotionActive(Objects.requireNonNull(Potion.getPotionById(11))))
             {
                 damage -= damage / 4.0F;
             }
 
             damage = Math.max(damage - ep.getAbsorptionAmount(), 0.0F);
+
             return damage;
         } else
         {
             damage = CombatRules.getDamageAfterAbsorb(damage, (float) entity.getTotalArmorValue(), (float) entity.getEntityAttribute(SharedMonsterAttributes.ARMOR_TOUGHNESS).getAttributeValue());
+
             return damage;
         }
     }
@@ -311,6 +321,7 @@ public class CrystalAura extends Module
     private float getDamageMultiplied(float damage)
     {
         int diff = this.mc.world.getDifficulty().getId();
+
         return damage * (diff == 0 ? 0.0F : (diff == 2 ? 1.0F : (diff == 1 ? 0.5F : 1.5F)));
     }
 
@@ -330,7 +341,6 @@ public class CrystalAura extends Module
         {
             this.isSpoofingAngles = false;
         }
-
     }
 
     public void onDisable()
@@ -345,7 +355,7 @@ public class CrystalAura extends Module
         if (e instanceof EntityWolf && ((EntityWolf) e).isAngry())
         {
             return false;
-        } else if (!(e instanceof EntityAnimal) && !(e instanceof EntityAgeable) && !(e instanceof EntityTameable) && !(e instanceof EntityAmbientCreature) && !(e instanceof EntitySquid))
+        } else if (!(e instanceof EntityAgeable) && !(e instanceof EntityAmbientCreature) && !(e instanceof EntitySquid))
         {
             return e instanceof EntityIronGolem && ((EntityIronGolem) e).getRevengeTarget() == null;
         } else
@@ -364,15 +374,20 @@ public class CrystalAura extends Module
         double dirx = me.posX - px;
         double diry = me.posY - py;
         double dirz = me.posZ - pz;
+
         double len = Math.sqrt(dirx * dirx + diry * diry + dirz * dirz);
+
         dirx /= len;
         diry /= len;
         dirz /= len;
+
         double pitch = Math.asin(diry);
         double yaw = Math.atan2(dirz, dirx);
+
         pitch = pitch * 180.0D / 3.141592653589793D;
         yaw = yaw * 180.0D / 3.141592653589793D;
         yaw += 90.0D;
+
         return new double[] {yaw, pitch};
     }
 
