@@ -11,35 +11,40 @@ import java.util.List;
 public abstract class ModuleWindow
 {
     public FontRenderer font;
-    public List<Module> modList = new ArrayList();
-    public LinkedHashMap<Module, Boolean> mods = new LinkedHashMap();
+    public List<Module> modList = new ArrayList<>();
+    public LinkedHashMap<Module, Boolean> mods = new LinkedHashMap<>();
+
     public String name;
+
     public int len;
+
     public int posX;
     public int posY;
     public int mouseX;
     public int mouseY;
     public int prevmX;
     public int prevmY;
+
     public int keyDown;
     public boolean lmDown;
     public boolean rmDown;
     public boolean lmHeld;
+
     public boolean dragging;
 
     public ModuleWindow(List<Module> mods, String name, int len, int posX, int posY)
     {
         this.modList = mods;
-        Iterator var6 = mods.iterator();
 
-        while (var6.hasNext())
+        for (Module m : mods)
         {
-            Module m = (Module) var6.next();
             this.mods.put(m, false);
         }
 
         this.name = name;
+
         this.len = len;
+
         this.posX = posX;
         this.posY = posY;
     }
@@ -83,7 +88,7 @@ public abstract class ModuleWindow
         return this.mouseX > minX && this.mouseX < maxX && this.mouseY > minY && this.mouseY < maxY;
     }
 
-    protected String cutText(String text, int leng)
+    protected String cutText(String text, int len)
     {
         String text1 = text;
 

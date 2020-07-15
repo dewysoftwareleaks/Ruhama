@@ -29,10 +29,13 @@ public class ModuleWindowDark extends ModuleWindow
     {
         this.mouseX = mX;
         this.mouseY = mY;
+
         this.len = leng;
         this.font = Minecraft.getMinecraft().fontRenderer;
+
         GuiScreen.drawRect(this.posX, this.posY - 10, this.posX + this.len, this.posY, this.mouseOver(this.posX, this.posY - 10, this.posX + this.len, this.posY) ? -1877995504 : -1875890128);
         this.font.drawStringWithShadow(this.name, (float) (this.posX + this.len / 2 - this.font.getStringWidth(this.name) / 2), (float) (this.posY - 9), 7384992);
+
         if (this.mouseOver(this.posX, this.posY - 10, this.posX + this.len, this.posY) && this.lmDown)
         {
             this.dragging = true;
@@ -52,28 +55,26 @@ public class ModuleWindowDark extends ModuleWindow
         this.prevmX = this.mouseX;
         this.prevmY = this.mouseY;
         int count = 0;
-        Iterator var5 = (new LinkedHashMap(this.mods)).entrySet().iterator();
 
-        while (var5.hasNext())
+        for (Object mods : (new LinkedHashMap<>(this.mods)).entrySet())
         {
-            Entry m = (Entry) var5.next();
+            Entry m = (Entry) mods;
 
             int c2;
+
             try
             {
                 GuiScreen.drawRect(this.posX, this.posY + count * 14, this.posX + this.len, this.posY + 14 + count * 14, this.mouseOver(this.posX, this.posY + count * 14, this.posX + this.len, this.posY + 14 + count * 14) ? 1882206320 : 1879048192);
                 this.font.drawStringWithShadow(this.cutText(((Module) m.getKey()).getName(), this.len), (float) (this.posX + 2), (float) (this.posY + 3 + count * 14), ((Module) m.getKey()).isToggled() ? 7401440 : 12632256);
                 GuiScreen.drawRect((Boolean) m.getValue() ? this.posX + this.len - 2 : this.posX + this.len - 1, this.posY + count * 14, this.posX + this.len, this.posY + 14 + count * 14, (Boolean) m.getValue() ? -1619984400 : 1601241072);
+
                 if (this.mouseOver(this.posX, this.posY + count * 14, this.posX + this.len, this.posY + 14 + count * 14))
                 {
                     GL11.glTranslated(0.0D, 0.0D, 300.0D);
                     Matcher mat = Pattern.compile("\\b.{1,22}\\b\\W?").matcher(((Module) m.getKey()).getDesc());
                     c2 = 0;
 
-                    int c3;
-                    for (c3 = 0; mat.find(); ++c2)
-                    {
-                    }
+                    int c3 = 0;
 
                     mat.reset();
 
@@ -81,6 +82,7 @@ public class ModuleWindowDark extends ModuleWindow
                     {
                         GuiScreen.drawRect(this.posX + this.len + 3, this.posY - 1 + count * 14 - c2 * 10 + c3 * 10, this.posX + this.len + 6 + this.font.getStringWidth(mat.group().trim()), this.posY + count * 14 - c2 * 10 + c3 * 10 + 9, -1879048144);
                         this.font.drawStringWithShadow(mat.group(), (float) (this.posX + this.len + 5), (float) (this.posY + count * 14 - c2 * 10 + c3 * 10), -1);
+
                         ++c3;
                     }
 
@@ -99,10 +101,12 @@ public class ModuleWindowDark extends ModuleWindow
 
                 if ((Boolean) m.getValue())
                 {
-                    for (Iterator var14 = ((Module) m.getKey()).getSettings().iterator(); var14.hasNext(); GuiScreen.drawRect(this.posX + this.len - 1, this.posY + count * 14, this.posX + this.len, this.posY + 14 + count * 14, -1619984400))
+                    for (Iterator i = ((Module) m.getKey()).getSettings().iterator(); i.hasNext(); GuiScreen.drawRect(this.posX + this.len - 1, this.posY + count * 14, this.posX + this.len, this.posY + 14 + count * 14, -1619984400))
                     {
-                        SettingBase s = (SettingBase) var14.next();
+                        SettingBase s = (SettingBase) i.next();
+
                         ++count;
+
                         if (s instanceof SettingMode)
                         {
                             this.drawModeSetting(s.toMode(), this.posX, this.posY + count * 14);
@@ -120,20 +124,18 @@ public class ModuleWindowDark extends ModuleWindow
                     }
 
                     ++count;
+
                     this.drawBindSetting((Module) m.getKey(), this.keyDown, this.posX, this.posY + count * 14);
                     GuiScreen.drawRect(this.posX + this.len - 1, this.posY + count * 14, this.posX + this.len, this.posY + 14 + count * 14, -1619984400);
                 }
 
                 ++count;
-            } catch (Exception var13)
+            } catch (Exception e)
             {
                 c2 = 10;
-                StackTraceElement[] var9 = var13.getStackTrace();
-                int var10 = var9.length;
 
-                for (int var11 = 0; var11 < var10; ++var11)
+                for (StackTraceElement e69 : e.getStackTrace())
                 {
-                    StackTraceElement e69 = var9[var11];
                     this.font.drawStringWithShadow(e69.toString(), 10.0F, (float) c2, 16719904);
                     c2 += 10;
                 }
