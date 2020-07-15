@@ -12,9 +12,11 @@ public class MixinLoader implements IFMLLoadingPlugin
     public MixinLoader()
     {
         System.out.println("mixin loading \n\n\n\n\n\n\n\n\n\n");
+
         MixinBootstrap.init();
         Mixins.addConfiguration("mixins.a32k.json");
         MixinEnvironment.getDefaultEnvironment().setObfuscationContext("searge");
+
         System.out.println(MixinEnvironment.getDefaultEnvironment().getObfuscationContext());
     }
 

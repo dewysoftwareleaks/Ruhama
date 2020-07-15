@@ -33,6 +33,7 @@ public class MixinPacketSend
         if (packetIn instanceof CPacketPlayerTryUseItemOnBlock)
         {
             CPacketPlayerTryUseItemOnBlock packet = (CPacketPlayerTryUseItemOnBlock) packetIn;
+
             if (Minecraft.getMinecraft().player.getHeldItem(packet.getHand()).getItem() instanceof ItemShulkerBox || Minecraft.getMinecraft().player.getHeldItem(packet.getHand()).getItem() == Item.getItemFromBlock(Blocks.HOPPER))
             {
                 BlockPos pos = packet.getPos().offset(packet.getDirection());
@@ -40,6 +41,5 @@ public class MixinPacketSend
                 Ruhama.friendBlocks.put(pos, 300);
             }
         }
-
     }
 }

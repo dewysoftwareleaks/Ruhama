@@ -23,6 +23,5 @@ public class MixinPacketRead
         {
             info.cancel();
         }
-
     }
 }

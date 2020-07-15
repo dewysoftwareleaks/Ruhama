@@ -22,10 +22,9 @@ public class MixinContainerGui extends GuiScreen
         try
         {
             this.peek.draw(mouseX, mouseY, (GuiContainer) this.mc.currentScreen);
-        } catch (Exception var6)
+        } catch (Exception e)
         {
-            var6.printStackTrace();
+            e.printStackTrace();
         }
-
     }
 }
