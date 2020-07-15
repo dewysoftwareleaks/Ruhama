@@ -23,7 +23,7 @@ public class ShulkerAura extends Module
 
     public ShulkerAura()
     {
-        super("ShulkerAura", 0, Category.COMBAT, "Automatically opens shulkers", (List) null);
+        super("ShulkerAura", 0, Category.COMBAT, "Automatically opens shulkers", null);
     }
 
     public void onUpdate()
@@ -48,7 +48,7 @@ public class ShulkerAura extends Module
             {
                 if (this.inShulker)
                 {
-                    this.mc.displayGuiScreen((GuiScreen) null);
+                    this.mc.displayGuiScreen(null);
                 }
 
                 this.inShulker = false;

@@ -12,15 +12,15 @@ import java.util.List;
 
 public class Module
 {
+    private final Category category;
+    private final String desc;
+    private final List<TextWindow> windows = new ArrayList();
     public boolean keyActive = false;
     protected Minecraft mc = Minecraft.getMinecraft();
     private String name;
     private KeyBinding key;
     private boolean toggled;
-    private final Category category;
-    private final String desc;
     private List<SettingBase> settings = new ArrayList();
-    private final List<TextWindow> windows = new ArrayList();
 
     public Module(String nm, int k, Category c, String d, List<SettingBase> s)
     {

@@ -12,7 +12,7 @@ public class ElytraReplace extends Module
 {
     public ElytraReplace()
     {
-        super("ElytraReplace", 0, Category.MISC, "Automatically replaces your elytra when its low", (List) null);
+        super("ElytraReplace", 0, Category.MISC, "Automatically replaces your elytra when its low", null);
     }
 
     public void onUpdate()

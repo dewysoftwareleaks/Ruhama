@@ -11,6 +11,7 @@ import java.util.List;
 
 public class TextWindow
 {
+    private final List<AdvancedText> text = new ArrayList();
     public FontRenderer font;
     public int posX;
     public int posY;
@@ -23,7 +24,6 @@ public class TextWindow
     public boolean dragging;
     public String title = "";
     public int len = 10;
-    private final List<AdvancedText> text = new ArrayList();
 
     public TextWindow(int x, int y, String title)
     {

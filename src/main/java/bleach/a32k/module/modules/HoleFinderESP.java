@@ -22,9 +22,9 @@ import java.util.List;
 
 public class HoleFinderESP extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingSlider(5.0D, 25.0D, 10.0D, 0, "Range: "), new SettingMode("Draw: ", new String[] {"Full", "Flat"}), new SettingToggle(true, "Rainbow"), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Obby-R: "), new SettingSlider(0.0D, 255.0D, 255.0D, 0, "Obby-G: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Obby-B: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Bedrk-R: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Bedrk-G: "), new SettingSlider(0.0D, 255.0D, 255.0D, 0, "Bedrk-B: "));
-    public Vec3d prevPos;
+    private static final List<SettingBase> settings = Arrays.asList(new SettingSlider(5.0D, 25.0D, 10.0D, 0, "Range: "), new SettingMode("Draw: ", "Full", "Flat"), new SettingToggle(true, "Rainbow"), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Obby-R: "), new SettingSlider(0.0D, 255.0D, 255.0D, 0, "Obby-G: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Obby-B: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Bedrk-R: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Bedrk-G: "), new SettingSlider(0.0D, 255.0D, 255.0D, 0, "Bedrk-B: "));
     private final List<BlockPos> poses = new ArrayList();
+    public Vec3d prevPos;
     private double[] rPos;
 
     public HoleFinderESP()

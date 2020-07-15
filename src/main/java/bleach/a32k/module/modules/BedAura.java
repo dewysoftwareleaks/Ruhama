@@ -39,13 +39,13 @@ public class BedAura extends Module
         double doubleExplosionSize = 12.0D;
         double distancedsize = entity.getDistance(posX, posY, posZ) / doubleExplosionSize;
         Vec3d vec3d = new Vec3d(posX, posY, posZ);
-        double blockDensity = (double) entity.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
+        double blockDensity = entity.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
         double v = (1.0D - distancedsize) * blockDensity;
         float damage = (float) ((int) ((v * v + v) / 2.0D * 9.0D * doubleExplosionSize + 1.0D));
         double finald = 1.0D;
         if (entity instanceof EntityLivingBase)
         {
-            finald = this.getBlastReduction((EntityLivingBase) entity, this.getDamageMultiplied(damage), new Explosion(this.mc.world, (Entity) null, posX, posY, posZ, 6.0F, false, true));
+            finald = this.getBlastReduction((EntityLivingBase) entity, this.getDamageMultiplied(damage), new Explosion(this.mc.world, null, posX, posY, posZ, 6.0F, false, true));
         }
 
         return (float) finald;

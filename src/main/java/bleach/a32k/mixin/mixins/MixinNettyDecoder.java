@@ -2,7 +2,6 @@ package bleach.a32k.mixin.mixins;
 
 import bleach.a32k.module.Module;
 import bleach.a32k.module.ModuleManager;
-import bleach.a32k.settings.SettingBase;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
-import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 
 @Mixin({NettyCompressionDecoder.class})

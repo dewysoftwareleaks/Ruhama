@@ -18,7 +18,7 @@ import java.util.List;
 
 public class AutoLog extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingToggle(false, "Health"), new SettingSlider(0.0D, 20.0D, 5.0D, 0, "Health: "), new SettingToggle(true, "Totems"), new SettingSlider(0.0D, 6.0D, 0.0D, 0, "Totems: "), new SettingMode("Crystal: ", new String[] {"None", "Near", "Near+No Totem", "Near+Health"}), new SettingSlider(0.0D, 8.0D, 4.0D, 2, "CrystalRange: "), new SettingToggle(false, "Nearby Player"), new SettingSlider(0.0D, 100.0D, 20.0D, 1, "Range: "));
+    private static final List<SettingBase> settings = Arrays.asList(new SettingToggle(false, "Health"), new SettingSlider(0.0D, 20.0D, 5.0D, 0, "Health: "), new SettingToggle(true, "Totems"), new SettingSlider(0.0D, 6.0D, 0.0D, 0, "Totems: "), new SettingMode("Crystal: ", "None", "Near", "Near+No Totem", "Near+Health"), new SettingSlider(0.0D, 8.0D, 4.0D, 2, "CrystalRange: "), new SettingToggle(false, "Nearby Player"), new SettingSlider(0.0D, 100.0D, 20.0D, 1, "Range: "));
 
     public AutoLog()
     {
@@ -54,7 +54,7 @@ public class AutoLog extends Module
                         Entity e = (Entity) var5.next();
                         if (e instanceof EntityEnderCrystal)
                         {
-                            double d = (double) this.mc.player.getDistance(e);
+                            double d = this.mc.player.getDistance(e);
                             if (d <= this.getSettings().get(5).toSlider().getValue() && (this.getSettings().get(4).toMode().mode == 1 || this.getSettings().get(4).toMode().mode == 2 && this.getTotems() <= (int) this.getSettings().get(3).toSlider().getValue() || this.getSettings().get(4).toMode().mode == 3 && (double) this.mc.player.getHealth() < this.getSettings().get(1).toSlider().getValue()))
                             {
                                 this.logOut("Logged Out " + d + " Blocks Away From A Crystal");

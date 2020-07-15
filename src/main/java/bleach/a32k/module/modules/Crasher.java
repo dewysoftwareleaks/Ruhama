@@ -22,7 +22,7 @@ import java.util.stream.IntStream;
 
 public class Crasher extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", new String[] {"Jessica", "Raion"}), new SettingSlider(1.0D, 20.0D, 5.0D, 0, "Uses: "), new SettingMode("Fill: ", new String[] {"Ascii", "0xFFFF", "Random", "Old"}));
+    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", "Jessica", "Raion"), new SettingSlider(1.0D, 20.0D, 5.0D, 0, "Uses: "), new SettingMode("Fill: ", "Ascii", "0xFFFF", "Random", "Old"));
 
     public Crasher()
     {

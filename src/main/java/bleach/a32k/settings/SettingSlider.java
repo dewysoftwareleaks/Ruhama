@@ -2,7 +2,10 @@ package bleach.a32k.settings;
 
 import net.minecraft.client.Minecraft;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;

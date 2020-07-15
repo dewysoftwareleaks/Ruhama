@@ -38,7 +38,7 @@ import java.util.Map.Entry;
 
 public class StashFinder extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", new String[] {"Current", "0, 0"}), new SettingSlider(0.0D, 10.0D, 4.0D, 0, "Fly Gap: "), new SettingToggle(false, "Debug"), new SettingToggle(true, "AutoReopen"), new SettingToggle(true, "Shulker Log"), new SettingToggle(true, "Dupe Log"), new SettingToggle(true, "Chest Log"), new SettingToggle(true, "Sign Log"), new SettingToggle(false, "Illegal Log"), new SettingSlider(0.0D, 50.0D, 20.0D, 0, "Min Chest: "), new SettingToggle(true, "Active"));
+    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", "Current", "0, 0"), new SettingSlider(0.0D, 10.0D, 4.0D, 0, "Fly Gap: "), new SettingToggle(false, "Debug"), new SettingToggle(true, "AutoReopen"), new SettingToggle(true, "Shulker Log"), new SettingToggle(true, "Dupe Log"), new SettingToggle(true, "Chest Log"), new SettingToggle(true, "Sign Log"), new SettingToggle(false, "Illegal Log"), new SettingSlider(0.0D, 50.0D, 20.0D, 0, "Min Chest: "), new SettingToggle(true, "Active"));
     private final DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     public List<ChunkPos> chunks = new ArrayList();
     public List<ChunkPos> nextChunks = new ArrayList();
@@ -219,7 +219,7 @@ public class StashFinder extends Module
                     if (!this.chestList.contains(e.getKey()) && (double) e.getValue() >= this.getSettings().get(9).toSlider().getValue())
                     {
                         this.chestList.add(e.getKey());
-                        String text = e.getValue() + "x Chest | " + ((ChunkPos) e.getKey()).getXStart() + ", " + ((ChunkPos) e.getKey()).getZStart();
+                        String text = e.getValue() + "x Chest | " + e.getKey().getXStart() + ", " + e.getKey().getZStart();
                         this.mc.ingameGUI.getChatGUI().printChatMessage(new TextComponentString("§3" + text));
                         content = content + text + " | " + this.dtf.format(LocalDateTime.now()) + "\n";
                     }
@@ -293,7 +293,7 @@ public class StashFinder extends Module
             }
 
             --this.elytratime;
-            boolean flat = ModuleManager.getModuleByName("ElytraFly").isToggled() && ((SettingBase) ModuleManager.getModuleByName("ElytraFly").getSettings().get(0)).toMode().mode == 0;
+            boolean flat = ModuleManager.getModuleByName("ElytraFly").isToggled() && ModuleManager.getModuleByName("ElytraFly").getSettings().get(0).toMode().mode == 0;
             if (!flat && this.getSettings().get(3).toToggle().state && this.elytratime > 0 && !this.mc.player.onGround && this.mc.currentScreen != null)
             {
                 this.mc.player.connection.sendPacket(new CPacketEntityAction(this.mc.player, Action.START_FALL_FLYING));
@@ -348,10 +348,10 @@ public class StashFinder extends Module
                 if (!this.nextChunks.isEmpty())
                 {
                     this.nextChunk = this.nextChunks.get(0);
-                    this.facePos((double) (this.nextChunk.getXStart() + 8), (double) (this.nextChunk.getZStart() + 8));
+                    this.facePos(this.nextChunk.getXStart() + 8, this.nextChunk.getZStart() + 8);
                     if (flat)
                     {
-                        Vec3d forward = (new Vec3d(0.0D, 0.0D, ((SettingBase) ModuleManager.getModuleByName("ElytraFly").getSettings().get(4)).toSlider().getValue())).rotateYaw(-((float) Math.toRadians((double) this.mc.player.rotationYaw)));
+                        Vec3d forward = (new Vec3d(0.0D, 0.0D, ModuleManager.getModuleByName("ElytraFly").getSettings().get(4).toSlider().getValue())).rotateYaw(-((float) Math.toRadians(this.mc.player.rotationYaw)));
                         this.mc.player.setVelocity(forward.x, forward.y, forward.z);
                     } else
                     {

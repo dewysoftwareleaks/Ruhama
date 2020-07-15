@@ -20,7 +20,7 @@ public class StrengthESP extends Module
 
     public StrengthESP()
     {
-        super("StrengthESP", 0, Category.RENDER, "Shows people with strength (only works with particles on)", (List) null);
+        super("StrengthESP", 0, Category.RENDER, "Shows people with strength (only works with particles on)", null);
     }
 
     public void onUpdate()
@@ -122,7 +122,7 @@ public class StrengthESP extends Module
         for (Iterator var2 = this.players.entrySet().iterator(); var2.hasNext(); c += 10)
         {
             Entry<Entity, Integer> e = (Entry) var2.next();
-            this.mc.fontRenderer.drawStringWithShadow(((Entity) e.getKey()).getName(), 2.0F, (float) c, 12591136);
+            this.mc.fontRenderer.drawStringWithShadow(e.getKey().getName(), 2.0F, (float) c, 12591136);
         }
 
         if (c != Gui.arrayListEnd + 15)
@@ -140,7 +140,7 @@ public class StrengthESP extends Module
         while (var1.hasNext())
         {
             Entry<Entity, Integer> e = (Entry) var1.next();
-            RenderUtils.drawFilledBlockBox(((Entity) e.getKey()).getEntityBoundingBox(), 1.0F, 0.0F, 0.0F, 0.3F);
+            RenderUtils.drawFilledBlockBox(e.getKey().getEntityBoundingBox(), 1.0F, 0.0F, 0.0F, 0.3F);
         }
 
     }

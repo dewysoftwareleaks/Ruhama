@@ -59,10 +59,7 @@ public class ObsidianTrap extends Module
                 if (this.isValid(player))
                 {
                     this.targets.add(player);
-                } else if (this.targets.contains(player))
-                {
-                    this.targets.remove(player);
-                }
+                } else this.targets.remove(player);
             }
         }
 

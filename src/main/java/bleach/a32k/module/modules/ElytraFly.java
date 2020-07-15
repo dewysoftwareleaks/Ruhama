@@ -17,7 +17,7 @@ import java.util.List;
 
 public class ElytraFly extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", new String[] {"Flat", "Boost"}), new SettingSlider(0.1D, 4.0D, 1.35D, 2, "Boost Max: "), new SettingToggle(true, "Accelerate"), new SettingSlider(1.0E-5D, 5.0E-4D, 2.0E-4D, 5, "Glide: "), new SettingSlider(0.01D, 3.0D, 1.0D, 2, "Flat Speed: "));
+    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", "Flat", "Boost"), new SettingSlider(0.1D, 4.0D, 1.35D, 2, "Boost Max: "), new SettingToggle(true, "Accelerate"), new SettingSlider(1.0E-5D, 5.0E-4D, 2.0E-4D, 5, "Glide: "), new SettingSlider(0.01D, 3.0D, 1.0D, 2, "Flat Speed: "));
 
     public ElytraFly()
     {
@@ -84,7 +84,7 @@ public class ElytraFly extends Module
                 var10000.motionZ *= 0.95D;
             }
 
-            Vec3d vec3d = (new Vec3d(0.0D, 0.0D, 0.23D)).rotatePitch(-((float) Math.toRadians((double) this.mc.player.rotationPitch))).rotateYaw(-((float) Math.toRadians((double) this.mc.player.rotationYaw)));
+            Vec3d vec3d = (new Vec3d(0.0D, 0.0D, 0.23D)).rotatePitch(-((float) Math.toRadians(this.mc.player.rotationPitch))).rotateYaw(-((float) Math.toRadians(this.mc.player.rotationYaw)));
             if (this.getSettings().get(2).toToggle().state && MathHelper.clamp(speed / 2.0D, 0.0D, this.getSettings().get(1).toSlider().getValue() - 0.25D) < 0.23D)
             {
                 vec3d = vec3d.scale(0.2D);

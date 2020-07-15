@@ -22,7 +22,7 @@ public class HopperNuker extends Module
 
     public HopperNuker()
     {
-        super("HopperNuker", 0, Category.COMBAT, "Nukes Hoppers Arond you", (List) null);
+        super("HopperNuker", 0, Category.COMBAT, "Nukes Hoppers Arond you", null);
     }
 
     public void onUpdate()

@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class TunnelESP extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", new String[] {"1x2", "All (slow)"}), new SettingSlider(2.0D, 20.0D, 10.0D, 0, "All Max: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Red: "), new SettingSlider(0.0D, 255.0D, 255.0D, 0, "Green: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Blue: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Alpha: "));
+    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", "1x2", "All (slow)"), new SettingSlider(2.0D, 20.0D, 10.0D, 0, "All Max: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Red: "), new SettingSlider(0.0D, 255.0D, 255.0D, 0, "Green: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Blue: "), new SettingSlider(0.0D, 255.0D, 100.0D, 0, "Alpha: "));
     private final List<TunnelESP.Space> spaces = new ArrayList();
     private final ConcurrentLinkedQueue<Chunk> scanQueue = new ConcurrentLinkedQueue();
     private final List<Chunk> addChunkQueue = new ArrayList();
@@ -122,32 +122,32 @@ public class TunnelESP extends Module
             TunnelESP.Space s = (TunnelESP.Space) var5.next();
             if (s.xpos)
             {
-                RenderUtils.drawFilledBlockBox(new AxisAlignedBB((double) (s.pos.getX() + 1), (double) s.pos.getY(), (double) s.pos.getZ(), (double) (s.pos.getX() + 1), (double) (s.pos.getY() + 1), (double) (s.pos.getZ() + 1)), r, g, b, a);
+                RenderUtils.drawFilledBlockBox(new AxisAlignedBB(s.pos.getX() + 1, s.pos.getY(), s.pos.getZ(), s.pos.getX() + 1, s.pos.getY() + 1, s.pos.getZ() + 1), r, g, b, a);
             }
 
             if (s.xneg)
             {
-                RenderUtils.drawFilledBlockBox(new AxisAlignedBB((double) s.pos.getX(), (double) s.pos.getY(), (double) s.pos.getZ(), (double) s.pos.getX(), (double) (s.pos.getY() + 1), (double) (s.pos.getZ() + 1)), r, g, b, a);
+                RenderUtils.drawFilledBlockBox(new AxisAlignedBB(s.pos.getX(), s.pos.getY(), s.pos.getZ(), s.pos.getX(), s.pos.getY() + 1, s.pos.getZ() + 1), r, g, b, a);
             }
 
             if (s.ypos)
             {
-                RenderUtils.drawFilledBlockBox(new AxisAlignedBB((double) s.pos.getX(), (double) (s.pos.getY() + 1), (double) s.pos.getZ(), (double) (s.pos.getX() + 1), (double) (s.pos.getY() + 1), (double) (s.pos.getZ() + 1)), r, g, b, a);
+                RenderUtils.drawFilledBlockBox(new AxisAlignedBB(s.pos.getX(), s.pos.getY() + 1, s.pos.getZ(), s.pos.getX() + 1, s.pos.getY() + 1, s.pos.getZ() + 1), r, g, b, a);
             }
 
             if (s.yneg)
             {
-                RenderUtils.drawFilledBlockBox(new AxisAlignedBB((double) s.pos.getX(), (double) s.pos.getY(), (double) s.pos.getZ(), (double) (s.pos.getX() + 1), (double) s.pos.getY(), (double) (s.pos.getZ() + 1)), r, g, b, a);
+                RenderUtils.drawFilledBlockBox(new AxisAlignedBB(s.pos.getX(), s.pos.getY(), s.pos.getZ(), s.pos.getX() + 1, s.pos.getY(), s.pos.getZ() + 1), r, g, b, a);
             }
 
             if (s.zpos)
             {
-                RenderUtils.drawFilledBlockBox(new AxisAlignedBB((double) s.pos.getX(), (double) s.pos.getY(), (double) (s.pos.getZ() + 1), (double) (s.pos.getX() + 1), (double) (s.pos.getY() + 1), (double) (s.pos.getZ() + 1)), r, g, b, a);
+                RenderUtils.drawFilledBlockBox(new AxisAlignedBB(s.pos.getX(), s.pos.getY(), s.pos.getZ() + 1, s.pos.getX() + 1, s.pos.getY() + 1, s.pos.getZ() + 1), r, g, b, a);
             }
 
             if (s.zneg)
             {
-                RenderUtils.drawFilledBlockBox(new AxisAlignedBB((double) s.pos.getX(), (double) s.pos.getY(), (double) s.pos.getZ(), (double) (s.pos.getX() + 1), (double) (s.pos.getY() + 1), (double) s.pos.getZ()), r, g, b, a);
+                RenderUtils.drawFilledBlockBox(new AxisAlignedBB(s.pos.getX(), s.pos.getY(), s.pos.getZ(), s.pos.getX() + 1, s.pos.getY() + 1, s.pos.getZ()), r, g, b, a);
             }
         }
 

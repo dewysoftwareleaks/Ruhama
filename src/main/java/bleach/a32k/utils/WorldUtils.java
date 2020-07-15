@@ -22,9 +22,9 @@ import java.util.List;
 
 public class WorldUtils
 {
+    private static final Minecraft mc = Minecraft.getMinecraft();
     public static List<Block> emptyBlocks;
     public static List<Block> rightclickableBlocks;
-    private static final Minecraft mc = Minecraft.getMinecraft();
 
     static
     {

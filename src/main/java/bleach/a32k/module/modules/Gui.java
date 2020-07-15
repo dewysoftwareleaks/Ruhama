@@ -31,7 +31,7 @@ public class Gui extends Module
         this.getWindows().get(0).clearText();
         int color = (new Color((int) this.getSettings().get(0).toSlider().getValue(), (int) this.getSettings().get(1).toSlider().getValue(), (int) this.getSettings().get(2).toSlider().getValue())).getRGB();
         String s = "Ruhama Client 0.8";
-        ((TextWindow) this.getWindows().get(0)).addText(new AdvancedText(s, true, color));
+        this.getWindows().get(0).addText(new AdvancedText(s, true, color));
         if (this.getSettings().get(3).toToggle().state)
         {
             int age = (int) (System.currentTimeMillis() / 20L % 510L);
@@ -54,7 +54,7 @@ public class Gui extends Module
             Module m = (Module) var4.next();
             if (m.isToggled())
             {
-                ((TextWindow) this.getWindows().get(0)).addText(new AdvancedText(m.getName(), true, color));
+                this.getWindows().get(0).addText(new AdvancedText(m.getName(), true, color));
             }
         }
 

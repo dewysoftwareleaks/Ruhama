@@ -34,7 +34,7 @@ import java.util.List;
 
 public class NewAuto32k extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingToggle(true, "2b Bypass"), new SettingToggle(true, "Killaura"), new SettingSlider(0.0D, 20.0D, 20.0D, 0, "CPS: "), new SettingMode("CPS: ", new String[] {"Clicks/Sec", "Clicks/Tick", "Tick Delay"}), new SettingToggle(false, "Timeout"), new SettingMode("Place: ", new String[] {"Auto", "Looking"}));
+    private static final List<SettingBase> settings = Arrays.asList(new SettingToggle(true, "2b Bypass"), new SettingToggle(true, "Killaura"), new SettingSlider(0.0D, 20.0D, 20.0D, 0, "CPS: "), new SettingMode("CPS: ", "Clicks/Sec", "Clicks/Tick", "Tick Delay"), new SettingToggle(false, "Timeout"), new SettingMode("Place: ", "Auto", "Looking"));
     private BlockPos pos;
     private int hopper;
     private int dispenser;
@@ -118,7 +118,7 @@ public class NewAuto32k extends Module
                 {
                     boolean rotate = this.getSettings().get(0).toToggle().state;
                     WorldUtils.placeBlock(this.pos, this.block, rotate, false);
-                    WorldUtils.rotatePacket((double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getX() + 0.5D, (double) (this.pos.getY() + 1), (double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getZ() + 0.5D);
+                    WorldUtils.rotatePacket((double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getX() + 0.5D, this.pos.getY() + 1, (double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getZ() + 0.5D);
                     WorldUtils.placeBlock(this.pos.add(0, 1, 0), this.dispenser, false, false);
                 } else
                 {
@@ -135,11 +135,11 @@ public class NewAuto32k extends Module
                         {
                             this.rot = Math.abs(x) > Math.abs(z) ? (x > 0 ? new int[] {-1, 0} : new int[] {1, 0}) : (z > 0 ? new int[] {0, -1} : new int[] {0, 1});
                             this.pos = this.mc.player.getPosition().add(x, y, z);
-                            if (this.mc.player.getPositionEyes(this.mc.getRenderPartialTicks()).distanceTo(this.mc.player.getPositionVector().add((double) (x - this.rot[0] / 2), (double) y + 0.5D, (double) (z + this.rot[1] / 2))) <= 4.5D && this.mc.player.getPositionEyes(this.mc.getRenderPartialTicks()).distanceTo(this.mc.player.getPositionVector().add((double) x + 0.5D, (double) y + 2.5D, (double) z + 0.5D)) <= 4.5D && WorldUtils.canPlaceBlock(this.pos) && WorldUtils.isBlockEmpty(this.pos) && WorldUtils.isBlockEmpty(this.pos.add(this.rot[0], 0, this.rot[1])) && WorldUtils.isBlockEmpty(this.pos.add(0, 1, 0)) && WorldUtils.isBlockEmpty(this.pos.add(0, 2, 0)) && WorldUtils.isBlockEmpty(this.pos.add(this.rot[0], 1, this.rot[1])))
+                            if (this.mc.player.getPositionEyes(this.mc.getRenderPartialTicks()).distanceTo(this.mc.player.getPositionVector().add(x - this.rot[0] / 2, (double) y + 0.5D, z + this.rot[1] / 2)) <= 4.5D && this.mc.player.getPositionEyes(this.mc.getRenderPartialTicks()).distanceTo(this.mc.player.getPositionVector().add((double) x + 0.5D, (double) y + 2.5D, (double) z + 0.5D)) <= 4.5D && WorldUtils.canPlaceBlock(this.pos) && WorldUtils.isBlockEmpty(this.pos) && WorldUtils.isBlockEmpty(this.pos.add(this.rot[0], 0, this.rot[1])) && WorldUtils.isBlockEmpty(this.pos.add(0, 1, 0)) && WorldUtils.isBlockEmpty(this.pos.add(0, 2, 0)) && WorldUtils.isBlockEmpty(this.pos.add(this.rot[0], 1, this.rot[1])))
                             {
                                 boolean rotate = this.getSettings().get(0).toToggle().state;
                                 WorldUtils.placeBlock(this.pos, this.block, rotate, false);
-                                WorldUtils.rotatePacket((double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getX() + 0.5D, (double) (this.pos.getY() + 1), (double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getZ() + 0.5D);
+                                WorldUtils.rotatePacket((double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getX() + 0.5D, this.pos.getY() + 1, (double) this.pos.add(-this.rot[0], 1, -this.rot[1]).getZ() + 0.5D);
                                 WorldUtils.placeBlock(this.pos.add(0, 1, 0), this.dispenser, false, false);
                                 return;
                             }
@@ -199,7 +199,7 @@ public class NewAuto32k extends Module
                     }
                 }
 
-                if (!(((Slot) gui.inventorySlots.inventorySlots.get(0)).getStack().getItem() instanceof ItemAir) && this.active)
+                if (!(gui.inventorySlots.inventorySlots.get(0).getStack().getItem() instanceof ItemAir) && this.active)
                 {
                     slot = this.mc.player.inventory.currentItem;
                     boolean pull = false;
@@ -234,7 +234,7 @@ public class NewAuto32k extends Module
 
             if (this.dispenserTicks == 1)
             {
-                this.mc.displayGuiScreen((GuiScreen) null);
+                this.mc.displayGuiScreen(null);
                 WorldUtils.placeBlock(this.pos.add(0, 2, 0), this.redstone, this.getSettings().get(0).toToggle().state, false);
             }
 
@@ -281,7 +281,7 @@ public class NewAuto32k extends Module
                 {
                     return Float.compare(a.getDistance(this.mc.player), b.getDistance(this.mc.player));
                 });
-                if (((Entity) players.get(0)).getDistance(this.mc.player) < 8.0F)
+                if (players.get(0).getDistance(this.mc.player) < 8.0F)
                 {
                     target = players.get(0);
                 }

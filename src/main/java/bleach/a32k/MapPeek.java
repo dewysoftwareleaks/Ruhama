@@ -23,8 +23,8 @@ import java.util.List;
 
 public class MapPeek
 {
-    private List<List<String>> pages = new ArrayList();
     private final Minecraft mc = Minecraft.getMinecraft();
+    private List<List<String>> pages = new ArrayList();
 
     public static List<List<String>> getTextInBook(ItemStack item)
     {
@@ -80,12 +80,12 @@ public class MapPeek
                 return;
             }
 
-            if (ModuleManager.getModuleByName("Peek").isToggled() && ((SettingBase) ModuleManager.getModuleByName("Peek").getSettings().get(1)).toToggle().state)
+            if (ModuleManager.getModuleByName("Peek").isToggled() && ModuleManager.getModuleByName("Peek").getSettings().get(1).toToggle().state)
             {
                 this.drawBookToolTip(slot, mouseX, mouseY);
             }
 
-            if (ModuleManager.getModuleByName("Peek").isToggled() && ((SettingBase) ModuleManager.getModuleByName("Peek").getSettings().get(0)).toToggle().state)
+            if (ModuleManager.getModuleByName("Peek").isToggled() && ModuleManager.getModuleByName("Peek").getSettings().get(0).toToggle().state)
             {
                 if (slot.getStack().getItem() != Items.FILLED_MAP)
                 {

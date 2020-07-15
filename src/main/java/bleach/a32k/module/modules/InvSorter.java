@@ -16,7 +16,7 @@ public class InvSorter extends Module
 
     public InvSorter()
     {
-        super("InvSorter", 0, Category.MISC, "Sorts your hotbar, use /invsorter command to save", (List) null);
+        super("InvSorter", 0, Category.MISC, "Sorts your hotbar, use /invsorter command to save", null);
     }
 
     public void onEnable()

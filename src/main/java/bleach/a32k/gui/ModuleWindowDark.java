@@ -215,7 +215,7 @@ public class ModuleWindowDark extends ModuleWindow
 
     public void drawSliderSetting(SettingSlider s, int x, int y)
     {
-        int pixels = (int) Math.round(MathHelper.clamp((double) this.len * ((s.getValue() - s.min) / (s.max - s.min)), 0.0D, (double) this.len));
+        int pixels = (int) Math.round(MathHelper.clamp((double) this.len * ((s.getValue() - s.min) / (s.max - s.min)), 0.0D, this.len));
         GuiScreen.drawRect(x, y, x + this.len, y + 14, 1879048192);
         GuiScreen.drawRect(x, y, x + pixels, y + 14, -265256800);
         this.font.drawStringWithShadow(s.text + (s.round == 0 && s.value > 100.0D ? Integer.toString((int) s.value) : s.value), (float) (x + 2), (float) (y + 3), this.mouseOver(x, y, x + this.len, y + 14) ? 13616079 : 13623503);

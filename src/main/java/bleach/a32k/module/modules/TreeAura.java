@@ -24,9 +24,9 @@ import java.util.List;
 
 public class TreeAura extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", new String[] {"Once", "Repeat"}), new SettingToggle(true, "Bonemeal"), new SettingToggle(true, "2b Bypass"), new SettingToggle(false, "Freeze"), new SettingToggle(false, "2x2"), new SettingSlider(0.0D, 40.0D, 10.0D, 0, "Delay: "), new SettingSlider(0.0D, 10.0D, 0.0D, 0, "Use Delay: "));
-    private int timesBonemealed;
+    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", "Once", "Repeat"), new SettingToggle(true, "Bonemeal"), new SettingToggle(true, "2b Bypass"), new SettingToggle(false, "Freeze"), new SettingToggle(false, "2x2"), new SettingSlider(0.0D, 40.0D, 10.0D, 0, "Delay: "), new SettingSlider(0.0D, 10.0D, 0.0D, 0, "Use Delay: "));
     private final List<TreeAura.TreeAction> queue = new ArrayList();
+    private int timesBonemealed;
     private BlockPos pos;
     private Vec3d playerPos;
 
@@ -64,7 +64,7 @@ public class TreeAura extends Module
             this.setToggled(false);
         } else
         {
-            Vec3d looking = this.mc.player.getPositionVector().add((new Vec3d(0.0D, 0.0D, 2.0D)).rotateYaw(-((float) Math.toRadians((double) this.mc.player.rotationYaw))));
+            Vec3d looking = this.mc.player.getPositionVector().add((new Vec3d(0.0D, 0.0D, 2.0D)).rotateYaw(-((float) Math.toRadians(this.mc.player.rotationYaw))));
             BlockPos backupPos = null;
             int x;
             int y;
@@ -184,10 +184,10 @@ public class TreeAura extends Module
         {
             if (this.getSettings().get(4).toToggle().state)
             {
-                RenderUtils.drawFilledBlockBox(new AxisAlignedBB((double) this.pos.getX(), (double) this.pos.getY(), (double) this.pos.getZ(), (double) (this.pos.getX() + 2), (double) this.pos.getY(), (double) (this.pos.getZ() + 2)), 1.0F, 0.0F, 0.0F, 0.1F);
+                RenderUtils.drawFilledBlockBox(new AxisAlignedBB(this.pos.getX(), this.pos.getY(), this.pos.getZ(), this.pos.getX() + 2, this.pos.getY(), this.pos.getZ() + 2), 1.0F, 0.0F, 0.0F, 0.1F);
             } else
             {
-                RenderUtils.drawFilledBlockBox(new AxisAlignedBB((double) this.pos.getX(), (double) this.pos.getY(), (double) this.pos.getZ(), (double) (this.pos.getX() + 1), (double) this.pos.getY(), (double) (this.pos.getZ() + 1)), 1.0F, 0.0F, 0.0F, 0.1F);
+                RenderUtils.drawFilledBlockBox(new AxisAlignedBB(this.pos.getX(), this.pos.getY(), this.pos.getZ(), this.pos.getX() + 1, this.pos.getY(), this.pos.getZ() + 1), 1.0F, 0.0F, 0.0F, 0.1F);
             }
 
         }

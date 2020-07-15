@@ -26,7 +26,7 @@ import java.util.List;
 
 public class DispenserAura extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", new String[] {"Block", "Mine"}), new SettingToggle(true, "2b Bypass"));
+    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", "Block", "Mine"), new SettingToggle(true, "2b Bypass"));
     public int breakingSlot = 0;
     public BlockPos breakingBlock;
 
@@ -57,7 +57,7 @@ public class DispenserAura extends Module
                 int i;
                 if (this.getSettings().get(0).toMode().mode == 0)
                 {
-                    BlockPos jamPos = dispenser.getPos().offset((EnumFacing) this.mc.world.getBlockState(dispenser.getPos()).getValue(PropertyDirection.create("facing")));
+                    BlockPos jamPos = dispenser.getPos().offset(this.mc.world.getBlockState(dispenser.getPos()).getValue(PropertyDirection.create("facing")));
                     if (this.mc.player.getDistance((double) jamPos.getX() + 0.5D, (double) jamPos.getY() + 0.5D, (double) jamPos.getZ() + 0.5D) > 4.25D)
                     {
                         return;

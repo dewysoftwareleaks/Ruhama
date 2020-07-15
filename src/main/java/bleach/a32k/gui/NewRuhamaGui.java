@@ -56,10 +56,10 @@ public class NewRuhamaGui extends GuiScreen
         while (var4.hasNext())
         {
             MutableTriple<Module, Integer, TextWindow> e = (MutableTriple) var4.next();
-            ModuleManager.getModuleByName(((Module) e.left).getName()).getWindows().set((Integer) e.middle, e.right);
-            if (ModuleManager.getModuleByName(((Module) e.left).getName()).isToggled())
+            ModuleManager.getModuleByName(e.left.getName()).getWindows().set(e.middle, e.right);
+            if (ModuleManager.getModuleByName(e.left.getName()).isToggled())
             {
-                ((TextWindow) e.right).draw(mouseX, mouseY);
+                e.right.draw(mouseX, mouseY);
             }
         }
 
@@ -89,9 +89,9 @@ public class NewRuhamaGui extends GuiScreen
             while (var4.hasNext())
             {
                 MutableTriple<Module, Integer, TextWindow> e = (MutableTriple) var4.next();
-                if (ModuleManager.getModuleByName(((Module) e.left).getName()).isToggled())
+                if (ModuleManager.getModuleByName(e.left.getName()).isToggled())
                 {
-                    ((TextWindow) e.right).onLmPressed();
+                    e.right.onLmPressed();
                 }
             }
         } else if (mouseButton == 1)
@@ -125,9 +125,9 @@ public class NewRuhamaGui extends GuiScreen
             while (var4.hasNext())
             {
                 MutableTriple<Module, Integer, TextWindow> e = (MutableTriple) var4.next();
-                if (ModuleManager.getModuleByName(((Module) e.left).getName()).isToggled())
+                if (ModuleManager.getModuleByName(e.left.getName()).isToggled())
                 {
-                    ((TextWindow) e.right).onLmReleased();
+                    e.right.onLmReleased();
                 }
             }
         }

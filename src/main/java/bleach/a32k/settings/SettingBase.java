@@ -10,7 +10,7 @@ public class SettingBase
         } catch (Exception var2)
         {
             System.out.println("Unable To Parse Setting");
-            return new SettingMode("PARSING ERROR", new String[0]);
+            return new SettingMode("PARSING ERROR");
         }
     }
 

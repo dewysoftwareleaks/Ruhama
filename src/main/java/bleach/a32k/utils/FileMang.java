@@ -294,7 +294,7 @@ public class FileMang
 
                 try
                 {
-                    if (((Module) e.left).getName().equals(split[0]) && ((Integer) e.middle).equals(Integer.parseInt(split[1])))
+                    if (((Module) e.left).getName().equals(split[0]) && e.middle.equals(Integer.parseInt(split[1])))
                     {
                         ((TextWindow) e.right).posX = Integer.parseInt(split[2]);
                         ((TextWindow) e.right).posY = Integer.parseInt(split[3]);

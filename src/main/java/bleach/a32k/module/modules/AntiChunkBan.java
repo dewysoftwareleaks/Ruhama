@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AntiChunkBan extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", new String[] {"AntiKick", "1 chunk"}));
+    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", "AntiKick", "1 chunk"));
     private int dis = 0;
 
     public AntiChunkBan()

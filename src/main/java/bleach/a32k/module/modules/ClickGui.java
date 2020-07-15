@@ -12,7 +12,7 @@ public class ClickGui extends Module
 
     public ClickGui()
     {
-        super("ClickGui", 0, Category.RENDER, "Clickgui", (List) null);
+        super("ClickGui", 0, Category.RENDER, "Clickgui", null);
     }
 
     public void onEnable()

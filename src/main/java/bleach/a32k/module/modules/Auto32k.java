@@ -28,7 +28,7 @@ import java.util.List;
 
 public class Auto32k extends Module
 {
-    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", new String[] {"Auto", "Looking"}), new SettingMode("Protect: ", new String[] {"Off", "Hopper", "Obby"}), new SettingToggle(true, "Aura"), new SettingSlider(0.0D, 20.0D, 10.0D, 0, "CPS: "), new SettingMode("CPS: ", new String[] {"Clicks/Sec", "Clicks/Tick", "Tick Delay"}), new SettingToggle(false, "SafeShuker"), new SettingToggle(false, "AntiAim"), new SettingToggle(true, "2b Bypass"));
+    private static final List<SettingBase> settings = Arrays.asList(new SettingMode("Mode: ", "Auto", "Looking"), new SettingMode("Protect: ", "Off", "Hopper", "Obby"), new SettingToggle(true, "Aura"), new SettingSlider(0.0D, 20.0D, 10.0D, 0, "CPS: "), new SettingMode("CPS: ", "Clicks/Sec", "Clicks/Tick", "Tick Delay"), new SettingToggle(false, "SafeShuker"), new SettingToggle(false, "AntiAim"), new SettingToggle(true, "2b Bypass"));
     private BlockPos placedHopperPos;
     private boolean ready;
     private boolean active;
@@ -203,7 +203,7 @@ public class Auto32k extends Module
                 }
             }
 
-            if (!(((Slot) gui.inventorySlots.inventorySlots.get(0)).getStack().getItem() instanceof ItemAir) && this.active)
+            if (!(gui.inventorySlots.inventorySlots.get(0).getStack().getItem() instanceof ItemAir) && this.active)
             {
                 slot = this.mc.player.inventory.currentItem;
                 boolean pull = false;
@@ -246,7 +246,7 @@ public class Auto32k extends Module
                 {
                     return Float.compare(a.getDistance(this.mc.player), b.getDistance(this.mc.player));
                 });
-                if (((Entity) players.get(0)).getDistance(this.mc.player) < 8.0F)
+                if (players.get(0).getDistance(this.mc.player) < 8.0F)
                 {
                     target = players.get(0);
                 }

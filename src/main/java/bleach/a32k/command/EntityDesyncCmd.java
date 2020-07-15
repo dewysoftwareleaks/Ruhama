@@ -16,9 +16,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
 public class EntityDesyncCmd extends CommandBase implements IClientCommand
 {
+    private final Minecraft mc = Minecraft.getMinecraft();
     public Entity entity;
     public boolean dismounted;
-    private final Minecraft mc = Minecraft.getMinecraft();
 
     public boolean allowUsageWithoutPrefix(ICommandSender sender, String message)
     {

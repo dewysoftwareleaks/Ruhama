@@ -46,25 +46,25 @@ public class PlayerRadar extends Module
                 {
                 }
 
-                double health = (new BigDecimal((double) (e.getHealth() + e.getAbsorptionAmount()))).setScale(1, RoundingMode.HALF_UP).doubleValue();
-                double dist = (new BigDecimal((double) e.getDistance(this.mc.player))).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                double health = (new BigDecimal(e.getHealth() + e.getAbsorptionAmount())).setScale(1, RoundingMode.HALF_UP).doubleValue();
+                double dist = (new BigDecimal(e.getDistance(this.mc.player))).setScale(1, RoundingMode.HALF_UP).doubleValue();
                 boolean round = this.getSettings().get(0).toToggle().state;
                 boolean dead = e.getHealth() <= 0.0F;
                 if (round)
                 {
                     if (dead)
                     {
-                        ((TextWindow) this.getWindows().get(0)).addText(new AdvancedText((int) health + " " + e.getName() + " " + (int) dist + "m", true, color));
+                        this.getWindows().get(0).addText(new AdvancedText((int) health + " " + e.getName() + " " + (int) dist + "m", true, color));
                     } else
                     {
-                        ((TextWindow) this.getWindows().get(0)).addText(new AdvancedText((int) health + " " + (this.mc.objectMouseOver.entityHit == e ? TextFormatting.GOLD.toString() : TextFormatting.GRAY.toString()) + e.getName() + " " + TextFormatting.DARK_GRAY.toString() + (int) dist + "m", true, color));
+                        this.getWindows().get(0).addText(new AdvancedText((int) health + " " + (this.mc.objectMouseOver.entityHit == e ? TextFormatting.GOLD.toString() : TextFormatting.GRAY.toString()) + e.getName() + " " + TextFormatting.DARK_GRAY.toString() + (int) dist + "m", true, color));
                     }
                 } else if (dead)
                 {
-                    ((TextWindow) this.getWindows().get(0)).addText(new AdvancedText(health + " " + e.getName() + " " + dist + "m", true, color));
+                    this.getWindows().get(0).addText(new AdvancedText(health + " " + e.getName() + " " + dist + "m", true, color));
                 } else
                 {
-                    ((TextWindow) this.getWindows().get(0)).addText(new AdvancedText(health + " " + (this.mc.objectMouseOver.entityHit == e ? TextFormatting.GOLD.toString() : TextFormatting.GRAY.toString()) + e.getName() + " " + TextFormatting.DARK_GRAY.toString() + dist + "m", true, color));
+                    this.getWindows().get(0).addText(new AdvancedText(health + " " + (this.mc.objectMouseOver.entityHit == e ? TextFormatting.GOLD.toString() : TextFormatting.GRAY.toString()) + e.getName() + " " + TextFormatting.DARK_GRAY.toString() + dist + "m", true, color));
                 }
 
                 c += 10;

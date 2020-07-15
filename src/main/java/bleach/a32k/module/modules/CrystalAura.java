@@ -41,7 +41,7 @@ public class CrystalAura extends Module
 
     public void onUpdate()
     {
-        EntityEnderCrystal crystal = (EntityEnderCrystal) this.mc.world.loadedEntityList.stream().filter((entityx) ->
+        EntityEnderCrystal crystal = this.mc.world.loadedEntityList.stream().filter((entityx) ->
         {
             return entityx instanceof EntityEnderCrystal;
         }).map((entityx) ->
@@ -86,7 +86,7 @@ public class CrystalAura extends Module
             }
 
             List<BlockPos> blocks = this.findCrystalBlocks();
-            List<Entity> entities = (List) this.mc.world.loadedEntityList.stream().filter((e) ->
+            List<Entity> entities = this.mc.world.loadedEntityList.stream().filter((e) ->
             {
                 return e instanceof EntityPlayer && this.getSettings().get(1).toToggle().state || e.isCreatureType(EnumCreatureType.MONSTER, false) && this.getSettings().get(2).toToggle().state || this.isPassive(e) && this.getSettings().get(3).toToggle().state;
             }).collect(Collectors.toList());
@@ -189,10 +189,10 @@ public class CrystalAura extends Module
                                     b = entity.getDistanceSq(blockPos);
                                 } while (b >= 169.0D);
 
-                                d = this.calculateDamage((double) blockPos.getX() + 0.5D, (double) (blockPos.getY() + 1), (double) blockPos.getZ() + 0.5D, entity);
+                                d = this.calculateDamage((double) blockPos.getX() + 0.5D, blockPos.getY() + 1, (double) blockPos.getZ() + 0.5D, entity);
                             } while (d <= damage);
 
-                            self = this.calculateDamage((double) blockPos.getX() + 0.5D, (double) (blockPos.getY() + 1), (double) blockPos.getZ() + 0.5D, this.mc.player);
+                            self = this.calculateDamage((double) blockPos.getX() + 0.5D, blockPos.getY() + 1, (double) blockPos.getZ() + 0.5D, this.mc.player);
                         } while (self > d && d >= (double) ((EntityLivingBase) entity).getHealth() && !this.getSettings().get(5).toToggle().state);
                     } while (self - 0.5D > (double) this.mc.player.getHealth() && !this.getSettings().get(5).toToggle().state);
 
@@ -237,7 +237,7 @@ public class CrystalAura extends Module
     private List<BlockPos> findCrystalBlocks()
     {
         NonNullList<BlockPos> positions = NonNullList.create();
-        positions.addAll((Collection) this.getSphere(this.getPlayerPos(), (float) this.getSettings().get(6).toSlider().getValue(), (int) this.getSettings().get(6).toSlider().getValue(), false, true, 0).stream().filter(this::canPlaceCrystal).collect(Collectors.toList()));
+        positions.addAll(this.getSphere(this.getPlayerPos(), (float) this.getSettings().get(6).toSlider().getValue(), (int) this.getSettings().get(6).toSlider().getValue(), false, true, 0).stream().filter(this::canPlaceCrystal).collect(Collectors.toList()));
         return positions;
     }
 
@@ -272,13 +272,13 @@ public class CrystalAura extends Module
         float doubleExplosionSize = 12.0F;
         double distancedsize = entity.getDistance(posX, posY, posZ) / (double) doubleExplosionSize;
         Vec3d vec3d = new Vec3d(posX, posY, posZ);
-        double blockDensity = (double) entity.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
+        double blockDensity = entity.world.getBlockDensity(vec3d, entity.getEntityBoundingBox());
         double v = (1.0D - distancedsize) * blockDensity;
         float damage = (float) ((int) ((v * v + v) / 2.0D * 7.0D * (double) doubleExplosionSize + 1.0D));
         double finald = 1.0D;
         if (entity instanceof EntityLivingBase)
         {
-            finald = this.getBlastReduction((EntityLivingBase) entity, this.getDamageMultiplied(damage), new Explosion(this.mc.world, (Entity) null, posX, posY, posZ, 6.0F, false, true));
+            finald = this.getBlastReduction((EntityLivingBase) entity, this.getDamageMultiplied(damage), new Explosion(this.mc.world, null, posX, posY, posZ, 6.0F, false, true));
         }
 
         return (float) finald;
