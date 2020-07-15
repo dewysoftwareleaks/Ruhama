@@ -8,6 +8,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.IClientCommand;
 
+import java.util.Objects;
+
 public class InvSorterCmd extends CommandBase implements IClientCommand
 {
     public boolean allowUsageWithoutPrefix(ICommandSender sender, String message)
@@ -31,11 +33,12 @@ public class InvSorterCmd extends CommandBase implements IClientCommand
 
         for (int i = 0; i <= 9; ++i)
         {
-            s = s + Minecraft.getMinecraft().player.inventory.getStackInSlot(i).getItem().getRegistryName().toString() + "\n";
+            s = s + Objects.requireNonNull(Minecraft.getMinecraft().player.inventory.getStackInSlot(i).getItem().getRegistryName()).toString() + "\n";
         }
 
         FileMang.createEmptyFile("invsorter.txt");
         FileMang.appendFile(s, "invsorter.txt");
+
         RuhamaLogger.log("Saved Inventory");
     }
 

@@ -17,6 +17,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 public class EntityDesyncCmd extends CommandBase implements IClientCommand
 {
     private final Minecraft mc = Minecraft.getMinecraft();
+
     public Entity entity;
     public boolean dismounted;
 
@@ -59,9 +60,10 @@ public class EntityDesyncCmd extends CommandBase implements IClientCommand
                 this.entity = this.mc.player.getRidingEntity();
                 this.mc.player.dismountRidingEntity();
                 this.mc.world.removeEntity(this.entity);
+
                 MinecraftForge.EVENT_BUS.register(this);
                 RuhamaLogger.log("Dismounted");
-            } else if (!this.dismounted)
+            } else
             {
                 if (this.entity == null)
                 {
@@ -72,11 +74,12 @@ public class EntityDesyncCmd extends CommandBase implements IClientCommand
                 this.entity.isDead = false;
                 this.mc.world.loadedEntityList.add(this.entity);
                 this.mc.player.startRiding(this.entity, true);
+
                 this.entity = null;
+
                 MinecraftForge.EVENT_BUS.unregister(this);
                 RuhamaLogger.log("Remounted");
             }
-
         } else
         {
             RuhamaLogger.log("Invalid syntax, /entitydesync (dismount/remount)");
@@ -98,6 +101,7 @@ public class EntityDesyncCmd extends CommandBase implements IClientCommand
                 if (this.entity == null && this.mc.player.getRidingEntity() != null)
                 {
                     this.entity = this.mc.player.getRidingEntity();
+
                     this.mc.player.dismountRidingEntity();
                     this.mc.world.removeEntity(this.entity);
                 }
@@ -107,7 +111,6 @@ public class EntityDesyncCmd extends CommandBase implements IClientCommand
                     this.entity.setPosition(this.mc.player.posX, this.mc.player.posY, this.mc.player.posZ);
                     this.mc.player.connection.sendPacket(new CPacketVehicleMove(this.entity));
                 }
-
             }
         }
     }

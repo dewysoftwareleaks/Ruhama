@@ -9,6 +9,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.client.IClientCommand;
 
+import java.util.Objects;
+
 public class StashFinderCmd extends CommandBase implements IClientCommand
 {
     public boolean allowUsageWithoutPrefix(ICommandSender sender, String message)
@@ -35,7 +37,7 @@ public class StashFinderCmd extends CommandBase implements IClientCommand
         {
             try
             {
-                ((StashFinder) ModuleManager.getModuleByName("StashFinder")).startChunk = new ChunkPos(Integer.parseInt(args[0]) >> 4, Integer.parseInt(args[1]) >> 4);
+                ((StashFinder) Objects.requireNonNull(ModuleManager.getModuleByName("StashFinder"))).startChunk = new ChunkPos(Integer.parseInt(args[0]) >> 4, Integer.parseInt(args[1]) >> 4);
                 RuhamaLogger.log("Set stashfinder start to: " + args[0] + ", " + args[1]);
             } catch (Exception var5)
             {

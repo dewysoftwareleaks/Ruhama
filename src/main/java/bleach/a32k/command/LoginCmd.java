@@ -13,6 +13,7 @@ import net.minecraft.util.Session;
 import net.minecraftforge.client.IClientCommand;
 
 import java.net.Proxy;
+import java.util.Objects;
 
 public class LoginCmd extends CommandBase implements IClientCommand
 {
@@ -35,33 +36,35 @@ public class LoginCmd extends CommandBase implements IClientCommand
     {
         try
         {
-            if (this.login(args[0], args[1]) == "")
+            if (this.login(args[0], args[1]).equals(""))
             {
                 RuhamaLogger.log("Logged in");
             } else
             {
                 RuhamaLogger.log("Invalid login");
             }
-        } catch (Exception var5)
+        } catch (Exception ignored)
         {
         }
-
     }
 
     public String login(String email, String password)
     {
         YggdrasilUserAuthentication auth = (YggdrasilUserAuthentication) (new YggdrasilAuthenticationService(Proxy.NO_PROXY, "")).createUserAuthentication(Agent.MINECRAFT);
+
         auth.setUsername(email);
         auth.setPassword(password);
 
         try
         {
             auth.logIn();
-            ReflectUtils.getField(Minecraft.class, "session", "session").set(Minecraft.getMinecraft(), new Session(auth.getSelectedProfile().getName(), auth.getSelectedProfile().getId().toString(), auth.getAuthenticatedToken(), "mojang"));
+            Objects.requireNonNull(ReflectUtils.getField(Minecraft.class, "session", "session")).set(Minecraft.getMinecraft(), new Session(auth.getSelectedProfile().getName(), auth.getSelectedProfile().getId().toString(), auth.getAuthenticatedToken(), "mojang"));
+
             return "";
-        } catch (Exception var5)
+        } catch (Exception e)
         {
-            var5.printStackTrace();
+            e.printStackTrace();
+
             return "ï¿½4ï¿½loops!";
         }
     }

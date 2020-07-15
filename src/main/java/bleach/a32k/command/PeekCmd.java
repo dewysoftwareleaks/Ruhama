@@ -1,7 +1,6 @@
 package bleach.a32k.command;
 
 import bleach.a32k.module.ModuleManager;
-import bleach.a32k.settings.SettingBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -22,10 +21,13 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 
+import java.util.Objects;
+
 public class PeekCmd
 {
     public static int metadataTicks = -1;
     public static int guiTicks = -1;
+
     public static ItemStack shulker;
     public static EntityItem drop;
     public static InventoryBasic toOpen;
@@ -38,9 +40,11 @@ public class PeekCmd
     public static NBTTagCompound getShulkerNBT(ItemStack stack)
     {
         NBTTagCompound compound = stack.getTagCompound();
+
         if (compound != null && compound.hasKey("BlockEntityTag", 10))
         {
             NBTTagCompound tags = compound.getCompoundTag("BlockEntityTag");
+
             if (tags.hasKey("Items", 9))
             {
                 return tags;
@@ -54,18 +58,18 @@ public class PeekCmd
     public void onEntitySpawn(EntityJoinWorldEvent event)
     {
         Entity entity = event.getEntity();
+
         if (entity instanceof EntityItem)
         {
             drop = (EntityItem) entity;
             metadataTicks = 0;
         }
-
     }
 
     @SubscribeEvent
     public void onTick(ClientTickEvent event)
     {
-        if (ModuleManager.getModuleByName("Peek").isToggled() && ModuleManager.getModuleByName("Peek").getSettings().get(2).toToggle().state)
+        if (Objects.requireNonNull(ModuleManager.getModuleByName("Peek")).isToggled() && Objects.requireNonNull(ModuleManager.getModuleByName("Peek")).getSettings().get(2).toToggle().state)
         {
             if (event.phase == Phase.END)
             {
@@ -83,9 +87,11 @@ public class PeekCmd
             if (metadataTicks == 20)
             {
                 metadataTicks = -1;
+
                 if (drop.getItem().getItem() instanceof ItemShulkerBox)
                 {
                     Minecraft.getMinecraft().player.sendMessage(new TextComponentString("New shulker found! use /peek to view its content " + TextFormatting.GREEN + "(" + drop.getItem().getDisplayName() + ")"));
+
                     shulker = drop.getItem();
                 }
             }
@@ -93,9 +99,9 @@ public class PeekCmd
             if (guiTicks == 20)
             {
                 guiTicks = -1;
+
                 Minecraft.getMinecraft().player.displayGUIChest(toOpen);
             }
-
         }
     }
 
@@ -118,17 +124,20 @@ public class PeekCmd
 
         public void execute(MinecraftServer server, ICommandSender sender, String[] args)
         {
-            if (ModuleManager.getModuleByName("Peek").isToggled() && ModuleManager.getModuleByName("Peek").getSettings().get(2).toToggle().state)
+            if (ModuleManager.getModuleByName("Peek").isToggled() && Objects.requireNonNull(ModuleManager.getModuleByName("Peek")).getSettings().get(2).toToggle().state)
             {
                 if (!PeekCmd.shulker.isEmpty())
                 {
                     NBTTagCompound shulkerNBT = PeekCmd.getShulkerNBT(PeekCmd.shulker);
                     TileEntityShulkerBox fakeShulker = new TileEntityShulkerBox();
                     String customName = "container.shulkerBox";
+
                     boolean hasCustomName = false;
+
                     if (shulkerNBT != null)
                     {
                         fakeShulker.loadFromNbt(shulkerNBT);
+
                         if (shulkerNBT.hasKey("CustomName", 8))
                         {
                             customName = shulkerNBT.getString("CustomName");
@@ -141,6 +150,7 @@ public class PeekCmd
                     for (int i = 0; i < 27; ++i)
                     {
                         ItemStack stack = fakeShulker.getStackInSlot(i);
+
                         inv.setInventorySlotContents(i, stack == null ? new ItemStack(Items.AIR) : stack);
                     }
 
