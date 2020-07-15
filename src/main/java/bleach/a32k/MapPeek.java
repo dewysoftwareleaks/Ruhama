@@ -20,39 +20,35 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 public class MapPeek
 {
     private final Minecraft mc = Minecraft.getMinecraft();
-    private List<List<String>> pages = new ArrayList();
+    private List<List<String>> pages = new ArrayList<>();
 
     public static List<List<String>> getTextInBook(ItemStack item)
     {
-        List<String> pages = new ArrayList();
+        List<String> pages = new ArrayList<>();
         NBTTagCompound nbt = item.getTagCompound();
+
         if (nbt != null && nbt.hasKey("pages"))
         {
             NBTTagList nbt2 = nbt.getTagList("pages", 8);
-            nbt2.forEach((b) ->
-            {
-                pages.add(((NBTTagString) b).getString());
-            });
+
+            nbt2.forEach((b) -> pages.add(((NBTTagString) b).getString()));
         }
 
-        List<List<String>> finalPages = new ArrayList();
-        Iterator var4 = pages.iterator();
+        List<List<String>> finalPages = new ArrayList<>();
 
-        while (var4.hasNext())
+        for (String s : pages)
         {
-            String s = (String) var4.next();
             String buffer = "";
-            List<String> pageBuffer = new ArrayList();
-            char[] var8 = s.toCharArray();
-            int var9 = var8.length;
+            List<String> pageBuffer = new ArrayList<>();
+            char[] chars = s.toCharArray();
 
-            for (int var10 = 0; var10 < var9; ++var10)
+            for (char c : chars)
             {
-                char c = var8[var10];
                 if (Minecraft.getMinecraft().fontRenderer.getStringWidth(buffer) > 114 || buffer.endsWith("\n"))
                 {
                     pageBuffer.add(buffer.replace("\n", ""));
@@ -80,12 +76,12 @@ public class MapPeek
                 return;
             }
 
-            if (ModuleManager.getModuleByName("Peek").isToggled() && ModuleManager.getModuleByName("Peek").getSettings().get(1).toToggle().state)
+            if (Objects.requireNonNull(ModuleManager.getModuleByName("Peek")).isToggled() && Objects.requireNonNull(ModuleManager.getModuleByName("Peek")).getSettings().get(1).toToggle().state)
             {
                 this.drawBookToolTip(slot, mouseX, mouseY);
             }
 
-            if (ModuleManager.getModuleByName("Peek").isToggled() && ModuleManager.getModuleByName("Peek").getSettings().get(0).toToggle().state)
+            if (Objects.requireNonNull(ModuleManager.getModuleByName("Peek")).isToggled() && Objects.requireNonNull(ModuleManager.getModuleByName("Peek")).getSettings().get(0).toToggle().state)
             {
                 if (slot.getStack().getItem() != Items.FILLED_MAP)
                 {
@@ -93,19 +89,19 @@ public class MapPeek
                 }
 
                 MapData data = Items.FILLED_MAP.getMapData(slot.getStack(), this.mc.world);
-                byte[] colors = data.colors;
+                byte[] colors = Objects.requireNonNull(data).colors;
+
                 GL11.glPushMatrix();
                 GL11.glScaled(0.5D, 0.5D, 0.5D);
                 GL11.glTranslated(0.0D, 0.0D, 300.0D);
+
                 int x = mouseX * 2 + 30;
                 int y = mouseY * 2 - 164;
-                this.renderTooltipBox(x - 12, y + 12, 128, 128);
-                byte[] var9 = colors;
-                int var10 = colors.length;
 
-                for (int var11 = 0; var11 < var10; ++var11)
+                this.renderTooltipBox(x - 12, y + 12, 128, 128);
+
+                for (int b : colors)
                 {
-                    int b = var9[var11];
                     if (b / 4 != 0)
                     {
                         GuiScreen.drawRect(x, y, x + 1, y + 1, MapColor.COLORS[(b & 255) / 4].getMapColor(b & 255 & 3));
@@ -124,12 +120,11 @@ public class MapPeek
                 GL11.glScaled(2.0D, 2.0D, 2.0D);
                 GL11.glPopMatrix();
             }
-        } catch (Exception var13)
+        } catch (Exception e)
         {
             System.out.println("oopsie poopsie");
-            var13.printStackTrace();
+            e.printStackTrace();
         }
-
     }
 
     public void drawBookToolTip(Slot slot, int mX, int mY)
@@ -144,17 +139,18 @@ public class MapPeek
             if (!this.pages.isEmpty())
             {
                 int lenght = this.mc.fontRenderer.getStringWidth("Page: 1/" + this.pages.size());
+
                 this.renderTooltipBox(mX + 56 - lenght / 2, mY - this.pages.get(0).size() * 10 - 19, 5, lenght);
                 this.renderTooltipBox(mX, mY - this.pages.get(0).size() * 10 - 6, this.pages.get(0).size() * 10 - 2, 120);
                 this.mc.fontRenderer.drawStringWithShadow("Page: 1/" + this.pages.size(), (float) (mX + 68 - lenght / 2), (float) (mY - this.pages.get(0).size() * 10 - 32), -1);
+
                 int count = 0;
 
-                for (Iterator var6 = ((List) this.pages.get(0)).iterator(); var6.hasNext(); ++count)
+                for (Iterator pagesIter = ((List) this.pages.get(0)).iterator(); pagesIter.hasNext(); ++count)
                 {
-                    String s = (String) var6.next();
+                    String s = (String) pagesIter.next();
                     this.mc.fontRenderer.drawStringWithShadow(s, (float) (mX + 12), (float) (mY - 18 - this.pages.get(0).size() * 10 + count * 10), 49344);
                 }
-
             }
         }
     }
@@ -162,12 +158,16 @@ public class MapPeek
     public void renderTooltipBox(int x1, int y1, int x2, int y2)
     {
         GlStateManager.disableRescaleNormal();
+
         RenderHelper.disableStandardItemLighting();
+
         GlStateManager.disableLighting();
         GlStateManager.disableDepth();
         GlStateManager.translate(0.0F, 0.0F, 300.0F);
+
         int int_5 = x1 + 12;
         int int_6 = y1 - 12;
+
         GuiScreen.drawRect(int_5 - 3, int_6 - 4, int_5 + y2 + 3, int_6 - 3, -267386864);
         GuiScreen.drawRect(int_5 - 3, int_6 + x2 + 3, int_5 + y2 + 3, int_6 + x2 + 4, -267386864);
         GuiScreen.drawRect(int_5 - 3, int_6 - 3, int_5 + y2 + 3, int_6 + x2 + 3, -267386864);
@@ -177,6 +177,7 @@ public class MapPeek
         GuiScreen.drawRect(int_5 + y2 + 2, int_6 - 3 + 1, int_5 + y2 + 3, int_6 + x2 + 3 - 1, 1347420415);
         GuiScreen.drawRect(int_5 - 3, int_6 - 3, int_5 + y2 + 3, int_6 - 3 + 1, 1347420415);
         GuiScreen.drawRect(int_5 - 3, int_6 + x2 + 2, int_5 + y2 + 3, int_6 + x2 + 3, 1344798847);
+
         GlStateManager.enableLighting();
         GlStateManager.enableDepth();
         RenderHelper.enableStandardItemLighting();

@@ -33,6 +33,7 @@ import org.apache.commons.lang3.tuple.MutableTriple;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 @Mod(
         modid = "ruhama",
@@ -42,10 +43,9 @@ import java.util.Map.Entry;
 )
 public class Ruhama
 {
-    public static final String VERSION = "0.8";
-    public static final boolean PLUS = false;
     public static Minecraft mc = Minecraft.getMinecraft();
-    public static HashMap<BlockPos, Integer> friendBlocks = new HashMap();
+    public static HashMap<BlockPos, Integer> friendBlocks = new HashMap<>();
+
     private long timer = 0L;
     private boolean timerStart = false;
 
@@ -53,23 +53,21 @@ public class Ruhama
     public void cuckfuck(FMLInitializationEvent event)
     {
         MinecraftForge.EVENT_BUS.register(this);
+
         ClickGui.clickGui.initWindows();
+
         FileMang.init();
+
         FileMang.readModules();
         FileMang.readSettings();
         FileMang.readClickGui();
         FileMang.readBinds();
         FileMang.createFile("friends.txt");
-        Iterator var2 = ModuleManager.getModules().iterator();
 
-        while (var2.hasNext())
+        for (Module m : ModuleManager.getModules())
         {
-            Module m = (Module) var2.next();
-            Iterator var4 = m.getSettings().iterator();
-
-            while (var4.hasNext())
+            for (SettingBase s : m.getSettings())
             {
-                SettingBase s = (SettingBase) var4.next();
                 if (s instanceof SettingMode)
                 {
                     s.toMode().mode = MathHelper.clamp(s.toMode().mode, 0, s.toMode().modes.length - 1);
@@ -91,6 +89,7 @@ public class Ruhama
         ClientCommandHandler.instance.registerCommand(new InvSorterCmd());
         ClientCommandHandler.instance.registerCommand(new StashFinderCmd());
         ClientCommandHandler.instance.registerCommand(new EntityDesyncCmd());
+
         MinecraftForge.EVENT_BUS.register(new PeekCmd());
     }
 
@@ -113,29 +112,32 @@ public class Ruhama
         {
             if (!(mc.currentScreen instanceof NewRuhamaGui))
             {
-                Iterator var2 = NewRuhamaGui.textWins.iterator();
+                Iterator textIter = NewRuhamaGui.textWins.iterator();
 
                 label41:
+
                 while (true)
                 {
                     MutableTriple e;
                     do
                     {
-                        if (!var2.hasNext())
+                        if (!textIter.hasNext())
                         {
                             break label41;
                         }
 
-                        e = (MutableTriple) var2.next();
-                    } while (!ModuleManager.getModuleByName(((Module) e.left).getName()).isToggled());
+                        e = (MutableTriple) textIter.next();
+                    } while (!Objects.requireNonNull(ModuleManager.getModuleByName(((Module) e.left).getName())).isToggled());
 
                     int h = 2;
 
-                    for (Iterator var5 = ((TextWindow) e.right).getText().iterator(); var5.hasNext(); h += 10)
+                    for (Iterator iter = ((TextWindow) e.right).getText().iterator(); iter.hasNext(); h += 10)
                     {
-                        AdvancedText s = (AdvancedText) var5.next();
+                        AdvancedText s = (AdvancedText) iter.next();
                         ScaledResolution scale = new ScaledResolution(Minecraft.getMinecraft());
+
                         int x = (double) ((TextWindow) e.right).posX > (double) scale.getScaledWidth() / 1.5D ? ((TextWindow) e.right).posX + ((TextWindow) e.right).len - mc.fontRenderer.getStringWidth(s.text) - 2 : (((TextWindow) e.right).posX < scale.getScaledWidth() / 3 ? ((TextWindow) e.right).posX + 2 : ((TextWindow) e.right).posX + ((TextWindow) e.right).len / 2 - mc.fontRenderer.getStringWidth(s.text) / 2);
+
                         if (s.shadow)
                         {
                             mc.fontRenderer.drawStringWithShadow(s.text, (float) x, (float) (((TextWindow) e.right).posY + h), s.color);
@@ -154,13 +156,13 @@ public class Ruhama
     @SubscribeEvent
     public void suckcuck(ClientChatEvent event)
     {
-        if (ModuleManager.getModuleByName("RuhamaBad").isToggled() && !event.getMessage().contains("ʀᴜʜᴀᴍᴀ") && !event.getMessage().startsWith("/"))
+        if (Objects.requireNonNull(ModuleManager.getModuleByName("RuhamaBad")).isToggled() && !event.getMessage().contains("gayhama") && !event.getMessage().startsWith("/"))
         {
             event.setCanceled(true);
-            mc.ingameGUI.getChatGUI().addToSentMessages(event.getMessage());
-            mc.player.sendChatMessage(event.getMessage() + " ｜ ʀᴜʜᴀᴍᴀ");
-        }
 
+            mc.ingameGUI.getChatGUI().addToSentMessages(event.getMessage());
+            mc.player.sendChatMessage(event.getMessage() + " ｜ gayhama");
+        }
     }
 
     @SubscribeEvent
@@ -169,6 +171,7 @@ public class Ruhama
         if (System.currentTimeMillis() - 5000L > this.timer && this.timerStart)
         {
             this.timer = System.currentTimeMillis();
+
             FileMang.saveClickGui();
             FileMang.saveSettings();
             FileMang.saveModules();
@@ -183,20 +186,20 @@ public class Ruhama
                 ModuleManager.updateKeys();
 
                 Entry e;
+
                 try
                 {
-                    for (Iterator var2 = friendBlocks.entrySet().iterator(); var2.hasNext(); friendBlocks.replace((BlockPos) e.getKey(), (Integer) e.getValue() - 1))
+                    for (Iterator iter = friendBlocks.entrySet().iterator(); iter.hasNext(); friendBlocks.replace((BlockPos) e.getKey(), (Integer) e.getValue() - 1))
                     {
-                        e = (Entry) var2.next();
+                        e = (Entry) iter.next();
                         if ((Integer) e.getValue() <= 0)
                         {
                             friendBlocks.remove(e.getKey());
                         }
                     }
-                } catch (Exception var4)
+                } catch (Exception ignored)
                 {
                 }
-
             }
         }
     }
