@@ -2,4 +2,4 @@
 
 Ruhama, reverse engineered, clear as crystal.
 
-Buildable version releasing later today. ;)
+Full Gradle project too. Can't be arsed != incompetence lel
