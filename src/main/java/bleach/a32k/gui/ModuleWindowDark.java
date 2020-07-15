@@ -91,7 +91,7 @@ public class ModuleWindowDark extends ModuleWindow
 
                     if (this.rmDown)
                     {
-                        this.mods.replace(m.getKey(), !(Boolean) m.getValue());
+                        this.mods.replace((Module) m.getKey(), !(Boolean) m.getValue());
                     }
 
                     GL11.glTranslated(0.0D, 0.0D, -300.0D);

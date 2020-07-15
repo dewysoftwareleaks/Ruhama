@@ -47,7 +47,7 @@ public class StrengthESP extends Module
                 {
                     int count = 0;
                     int playerCount = 0;
-                    ArrayDeque[][] var3 = ReflectUtils.getField(ParticleManager.class, "fxLayers", "fxLayers").get(this.mc.effectRenderer);
+                    ArrayDeque[][] var3 = (ArrayDeque[][]) ReflectUtils.getField(ParticleManager.class, "fxLayers", "fxLayers").get(this.mc.effectRenderer);
                     int var4 = var3.length;
 
                     for (int var5 = 0; var5 < var4; ++var5)

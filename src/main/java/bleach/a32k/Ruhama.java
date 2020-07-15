@@ -185,7 +185,7 @@ public class Ruhama
                 Entry e;
                 try
                 {
-                    for (Iterator var2 = friendBlocks.entrySet().iterator(); var2.hasNext(); friendBlocks.replace(e.getKey(), (Integer) e.getValue() - 1))
+                    for (Iterator var2 = friendBlocks.entrySet().iterator(); var2.hasNext(); friendBlocks.replace((BlockPos) e.getKey(), (Integer) e.getValue() - 1))
                     {
                         e = (Entry) var2.next();
                         if ((Integer) e.getValue() <= 0)

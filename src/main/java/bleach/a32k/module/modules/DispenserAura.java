@@ -65,7 +65,7 @@ public class DispenserAura extends Module
 
                     i = 0;
 
-                    for (int i = 0; i <= 8; ++i)
+                    for (i = 0; i <= 8; ++i)
                     {
                         Item item = this.mc.player.inventory.getStackInSlot(i).getItem();
                         if (item instanceof ItemBlock && !(((ItemBlock) item).getBlock() instanceof BlockShulkerBox) && ((ItemBlock) item).getBlock().getDefaultState().isFullCube())

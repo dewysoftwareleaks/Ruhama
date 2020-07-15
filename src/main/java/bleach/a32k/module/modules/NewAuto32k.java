@@ -111,9 +111,9 @@ public class NewAuto32k extends Module
             {
                 RayTraceResult ray = this.mc.player.rayTrace(5.0D, this.mc.getRenderPartialTicks());
                 this.pos = ray.getBlockPos().up();
-                double x = (double) this.pos.getX() - this.mc.player.posX;
-                double z = (double) this.pos.getZ() - this.mc.player.posZ;
-                this.rot = Math.abs(x) > Math.abs(z) ? (x > 0.0D ? new int[] {-1, 0} : new int[] {1, 0}) : (z > 0.0D ? new int[] {0, -1} : new int[] {0, 1});
+                double xPos = (double) this.pos.getX() - this.mc.player.posX;
+                double zPos = (double) this.pos.getZ() - this.mc.player.posZ;
+                this.rot = Math.abs(xPos) > Math.abs(zPos) ? (xPos > 0.0D ? new int[] {-1, 0} : new int[] {1, 0}) : (zPos > 0.0D ? new int[] {0, -1} : new int[] {0, 1});
                 if (WorldUtils.canPlaceBlock(this.pos) && WorldUtils.isBlockEmpty(this.pos) && WorldUtils.isBlockEmpty(this.pos.add(this.rot[0], 0, this.rot[1])) && WorldUtils.isBlockEmpty(this.pos.add(0, 1, 0)) && WorldUtils.isBlockEmpty(this.pos.add(0, 2, 0)) && WorldUtils.isBlockEmpty(this.pos.add(this.rot[0], 1, this.rot[1])))
                 {
                     boolean rotate = this.getSettings().get(0).toToggle().state;

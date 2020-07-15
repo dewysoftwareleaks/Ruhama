@@ -203,11 +203,11 @@ public class StashFinder extends Module
 
                 while (var9.hasNext())
                 {
-                    TileEntity t = (TileEntity) var9.next();
-                    if (t instanceof TileEntityChest)
+                    TileEntity te = (TileEntity) var9.next();
+                    if (te instanceof TileEntityChest)
                     {
-                        Integer i = chunkMap.get(new ChunkPos(t.getPos()));
-                        chunkMap.put(new ChunkPos(t.getPos()), i == null ? 0 : i + 1);
+                        Integer i = chunkMap.get(new ChunkPos(te.getPos()));
+                        chunkMap.put(new ChunkPos(te.getPos()), i == null ? 0 : i + 1);
                     }
                 }
 

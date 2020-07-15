@@ -58,7 +58,7 @@ public class CrystalAura2 extends Module
         }).min(Comparator.comparing((c) ->
         {
             return this.mc.player.getDistance(c);
-        })).orElse((Object) null);
+        })).orElse(null);
         int crystalSlot;
         if (this.getSettings().get(5).toToggle().state && crystal != null && (double) this.mc.player.getDistance(crystal) <= this.getSettings().get(11).toSlider().getValue())
         {

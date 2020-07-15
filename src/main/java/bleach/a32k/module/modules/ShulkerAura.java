@@ -31,7 +31,7 @@ public class ShulkerAura extends Module
         HashMap<BlockPos, Integer> tempShulkers = new HashMap(this.openedShulkers);
 
         Entry e;
-        for (Iterator var2 = this.openedShulkers.entrySet().iterator(); var2.hasNext(); tempShulkers.replace(e.getKey(), (Integer) e.getValue() - 1))
+        for (Iterator var2 = this.openedShulkers.entrySet().iterator(); var2.hasNext(); tempShulkers.replace((BlockPos) e.getKey(), (Integer) e.getValue() - 1))
         {
             e = (Entry) var2.next();
             if ((Integer) e.getValue() <= 0)

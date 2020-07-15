@@ -50,7 +50,7 @@ public class CrystalAura extends Module
         }).min(Comparator.comparing((c) ->
         {
             return this.mc.player.getDistance(c);
-        })).orElse((Object) null);
+        })).orElse(null);
         if (crystal != null && (double) this.mc.player.getDistance(crystal) <= this.getSettings().get(7).toSlider().getValue())
         {
             if (System.nanoTime() / 1000000L - this.systemTime >= 250L)
