@@ -57,7 +57,7 @@ shadowJar {
     exclude 'dummyThing'
     exclude 'LICENSE.txt'
 
-    classifier = ''
+    classifier = 'all'
 }
 
 build.dependsOn(shadowJar)
